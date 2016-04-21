@@ -1,11 +1,18 @@
+"""
+Create nodeID-blockID pairs for each node, with init page rank
+    and list of neighbors. Total 685230 nodes.
+Usage:
+    python process_nodes.py <edge-file> <block-file> <output-file>
+"""
+import sys
 from collections import defaultdict
 
 
-EDGES_FILE = "data/test.txt"
-BLOCKS_FILE = "data/blocks.txt"
 TOTAL_NODES = 685230
 
-
+"""
+Populate dictionary of node with neighbors
+"""
 class Edges(object):
     def __init__(self, input_file):
         self.map = defaultdict(list)
@@ -22,6 +29,10 @@ class Edges(object):
         return self.map[node_id]
 
 
+"""
+Populate list of nodes given for each blockID,
+compute blockID given nodeID in log(n), where n=total blocks
+"""
 class Blocks(object):
     def __init__(self, input_file):
         self.map = []
@@ -45,13 +56,22 @@ class Blocks(object):
         return l
 
 
+"""
+Main arguments to run the script in command line
+"""
 if __name__ == "__main__":
-    edges = Edges(EDGES_FILE)
-    blocks = Blocks(BLOCKS_FILE)
-    page_rank = "{0:.9f}".format(1/float(TOTAL_NODES))
-    f = open("foo.txt", "w")
+    edge_file = sys.argv[1]
+    block_file = sys.argv[2]
+    out_file = sys.argv[3]
 
-    for nid in range(3):
+    print "Begin processing data..."
+    edges = Edges(edge_file)
+    blocks = Blocks(block_file)
+    page_rank = "{0:.9f}".format(1/float(TOTAL_NODES))
+    f = open(out_file, "w")
+
+    print "Writing node pairs into file..."
+    for nid in range(TOTAL_NODES):
         bid = blocks.get_blockID(nid)
         data = "{}-{} {}".format(nid, bid, page_rank)
 
@@ -62,18 +82,4 @@ if __name__ == "__main__":
         f.write("{}\n".format(data))
     f.close()
 
-
-# nodes_map = init_map(EDGES)
-# blocks = init_blocks(BLOCKS)
-# print blocks
-# print len(blocks)
-
-edges = Edges(EDGES_FILE)
-print edges.map
-
-blocks = Blocks(BLOCKS_FILE)
-print blocks.map
-
-
-
-
+    print "Successfully written {} nodes into {}".format(TOTAL_NODES, out_file)
