@@ -43,7 +43,8 @@ public class SimplePageRank {
 		    job.waitForCompletion(true);
 		    double residual = (double) job.getCounters().findCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL).getValue();
 		    residual /= Constants.NODE_NUM;
-		    System.out.println("The average of residuals in Pass " + i + " is " + residual);
+		    //Iteration 0 avg error 2.332958e+00
+		    System.out.println("Iteration " + i + " average error " + residual);
 		}
 	}
 }
