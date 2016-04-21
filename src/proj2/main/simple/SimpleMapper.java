@@ -2,16 +2,16 @@ package proj2.main.simple;
 
 import java.io.IOException;
 
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 /**
  * A Mapper that distributes the page rank value of the source node to all its destination node 
  */
-public class SimpleMapper extends Mapper<Text, Text, Text, Text>{
+public class SimpleMapper extends Mapper<LongWritable, Text, Text, Text>{
 
-	@Override
-	public void map(Text key, Text value, Context context) throws IOException, InterruptedException{
+	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
 		String[] tokens = value.toString().split("\\s+");
 		
 		// Format: "nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID......"

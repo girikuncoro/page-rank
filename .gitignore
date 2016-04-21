@@ -1,9 +1,5 @@
 bin/
 .classpath
 .project
-<<<<<<< HEAD
 .settings
-data/*
-=======
-.settings
->>>>>>> 025f072c46e7b84de6b492d5de86aca992628122
+data/
