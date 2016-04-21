@@ -1,7 +1,7 @@
 """
-Create pre-filtered copy of the input file
+Create pre-filtered copy of the input edges file
 Usage:
-    python filter.py <input-file> <output-file>
+    python process_edges.py <input-file> <output-file>
 """
 import sys
 
