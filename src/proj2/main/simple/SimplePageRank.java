@@ -2,6 +2,7 @@ package proj2.main.simple;
 
 import java.io.IOException;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -22,21 +23,27 @@ public class SimplePageRank {
 		
 		for (int i = 0; i < Constants.SIMPLE_MP_PASS_NUM; i++){
 			// create a new job
-		    Job job = Job.getInstance();
+			Configuration conf = new Configuration();
+		    Job job = Job.getInstance(conf, "PageRank " + i);
 		    
 		    // Specify various job-specific parameters
 		    job.setJarByClass(SimplePageRank.class);
-		    job.setJobName("Simple Page Rank");	
-		    
 		    job.setMapperClass(SimpleMapper.class);
 		    job.setReducerClass(SimpleReducer.class);
-		    
 		    job.setOutputKeyClass(Text.class);
 		    job.setOutputValueClass(Text.class);
 
-		    FileInputFormat.addInputPath(job, new Path(inputPath));
-		    FileOutputFormat.setOutputPath(job, new Path(outputPath));
+		    if (i == 0){
+			    FileInputFormat.addInputPath(job, new Path(inputPath));
+		    }else{
+			    FileInputFormat.addInputPath(job, new Path(outputPath + "iteration" + (i - 1)));
+		    }
+		    FileOutputFormat.setOutputPath(job, new Path(outputPath + "/iteration" + i));
+		    
 		    job.waitForCompletion(true);
+		    double residual = (double) job.getCounters().findCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL).getValue();
+		    residual /= Constants.NODE_NUM;
+		    System.out.println("The average of residuals in Pass " + i + " is " + residual);
 		}
 	}
 }

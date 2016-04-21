@@ -11,7 +11,8 @@ import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 
 public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
-
+	
+	@Override
 	public void reduce(Text key, Iterable<Text> values, Context context) 
 			throws IOException, InterruptedException {
 		Double newPageRank = new Double(0.0);
@@ -36,13 +37,16 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 				}
 			}
 		}
-		context.write(key, new Text(ID + " " + newPageRank.toString() + " " + outEdges.toString()));
 		
-		//(1-d)/N + d * sum (<PRt(u)/degree(u)>)
+		//compute new page rank: (1-d)/N + d * sum (<PRt(u)/degree(u)>)
 		newPageRank = Constants.DAMPING_FACTOR * newPageRank + 
 				(1 - Constants.DAMPING_FACTOR) / Constants.NODE_NUM;
+		// same format as the input for mapper
+		// Format: "nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID......"
+		context.write(key, new Text(ID + " " + newPageRank.toString() + " " + outEdges.toString()));
+		
 		double residual = Math.abs(oldPageRank - newPageRank) / newPageRank; 
-		DecimalFormat df = new DecimalFormat("00.0000");
+		DecimalFormat df = new DecimalFormat("#0.0000");
 		df.format(residual);
 		Counter counter = context.getCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL);
 		counter.increment((long) residual);
