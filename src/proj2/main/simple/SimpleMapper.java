@@ -13,6 +13,7 @@ public class SimpleMapper extends Mapper<LongWritable, Text, Text, Text>{
 
 	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException{
 		String[] tokens = value.toString().split("\\s+");
+		System.out.println("Value key for Mapper >>> " + value.toString());
 		
 		// Format: "nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID......"
 		if (tokens.length >= 2){
