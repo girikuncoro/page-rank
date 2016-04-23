@@ -13,4 +13,6 @@ public class Constants {
 	public static enum SimpleCounterEnum{
 		SIMPLE_RESIDUAL;
 	}
+	
+	public static final double conversionFactor = 10000.0;
 }

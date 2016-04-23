@@ -43,11 +43,10 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 				(1 - Constants.DAMPING_FACTOR) / Constants.NODE_NUM;
 		// same format as the input for mapper
 		// Format: "nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID......"
-//		context.write(key, new Text(ID + " " + newPageRank.toString() + " " + outEdges.toString()));
 		Text newValue = new Text(newPageRank.toString() + " " + outEdges.toString());
 		context.write(new Text(ID), newValue);
 		
-		double residual = Math.abs(oldPageRank - newPageRank) / newPageRank; 
+		double residual = Math.abs(oldPageRank - newPageRank) / newPageRank * Constants.conversionFactor;
 		DecimalFormat df = new DecimalFormat("#0.0000");
 		df.format(residual);
 		Counter counter = context.getCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL);

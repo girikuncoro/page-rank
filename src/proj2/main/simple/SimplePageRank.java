@@ -41,7 +41,7 @@ public class SimplePageRank {
 		    FileOutputFormat.setOutputPath(job, new Path(outputPath + "/iteration" + i));
 		    
 		    job.waitForCompletion(true);
-		    double residual = (double) job.getCounters().findCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL).getValue();
+		    double residual = (double) (job.getCounters().findCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL).getValue() / Constants.conversionFactor);
 		    residual /= Constants.NODE_NUM;
 		    //Iteration 0 avg error 2.332958e+00
 		    System.out.println("Iteration " + i + " average error " + residual);
