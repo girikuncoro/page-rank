@@ -1,5 +1,6 @@
 package proj2.main.node;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class Node {
@@ -10,11 +11,10 @@ public class Node {
 	private Double emittedPageRank = 0.0;
 	private String[] neighbors;
 	
-	public Node(String value) {
+	public Node(String value) throws IOException {
 		String[] tokens = value.toString().split("\\s+");
 		if (tokens.length < 2) {
-			System.out.println("Missing node ID or PageRank in the input for node " + value);
-			System.exit(1);
+			throw new IOException("Missing node ID or PageRank in the input for node " + value);
 		}
 		
 		nodeIDPair = tokens[0];
