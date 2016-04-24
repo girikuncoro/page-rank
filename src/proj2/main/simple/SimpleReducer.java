@@ -46,7 +46,7 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 		Text newValue = new Text(newPageRank.toString() + " " + outEdges.toString());
 		context.write(new Text(ID), newValue);
 		
-		double residual = Math.abs(oldPageRank - newPageRank) / newPageRank * Constants.conversionFactor;
+		double residual = Math.abs(oldPageRank - newPageRank) / newPageRank * Constants.PRECISION_FACTOR;
 		DecimalFormat df = new DecimalFormat("#0.0000");
 		df.format(residual);
 		Counter counter = context.getCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL);

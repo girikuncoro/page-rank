@@ -14,5 +14,5 @@ public class Constants {
 		SIMPLE_RESIDUAL;
 	}
 	
-	public static final double conversionFactor = 10000.0;
+	public static final double PRECISION_FACTOR = 10000.0;
 }
