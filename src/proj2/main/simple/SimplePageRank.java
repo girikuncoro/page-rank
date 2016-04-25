@@ -36,7 +36,7 @@ public class SimplePageRank {
 		    if (i == 0){
 			    FileInputFormat.addInputPath(job, new Path(inputPath));
 		    }else{
-			    FileInputFormat.addInputPath(job, new Path(outputPath + "iteration" + (i - 1)));
+			    FileInputFormat.addInputPath(job, new Path(outputPath + "/iteration" + (i - 1)));
 		    }
 		    FileOutputFormat.setOutputPath(job, new Path(outputPath + "/iteration" + i));
 		    

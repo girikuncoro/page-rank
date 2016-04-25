@@ -47,7 +47,7 @@ public class BlockedPageRank {
 			if (passNum == 0){
 			    FileInputFormat.addInputPath(job, new Path(inputPath));
 		    } else{
-			    FileInputFormat.addInputPath(job, new Path(outputPath + "iteration" + (passNum-1)));
+			    FileInputFormat.addInputPath(job, new Path(outputPath + "/iteration" + (passNum-1)));
 		    }
 			FileOutputFormat.setOutputPath(job, new Path(outputPath + "/iteration" + passNum));
 			
