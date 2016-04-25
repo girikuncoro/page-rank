@@ -130,7 +130,6 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 	}
 	
 	/**
-	 * TODO:
 	 * void IterateBlockOnce(B) {
 		    for( v ∈ B ) { NPR[v] = 0; }
 		    for( v ∈ B ) {
@@ -144,9 +143,41 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		    }
 		    for( v ∈ B ) { PR[v] = NPR[v]; }
 		}
+	 * 
+	 * v: all nodes in block B; u: all neighbors coming to v
+	 * BE contains u inside block B
+	 * BC contains u outside block B 
+	 * @return average residual (total changes/total nodes in B) for current iteration
 	 */
 	public double iterateBlockOnce() {
-		return new Double(0.0);
+		String nodeIDPair;
+		Double residual = new Double(0.0);
+		
+		for (Entry<String, Node> n : nodeMap.entrySet()) {
+			nodeIDPair = n.getKey();
+			Double oldPR = NPR.get(nodeIDPair);
+			Double newPR = new Double(0.0);
+			
+			if (BE.containsKey(nodeIDPair)) {
+				for (String incomingIDPair : BE.get(nodeIDPair)) {
+					Node incomingNode = nodeMap.get(incomingIDPair);
+					newPR += NPR.get(incomingIDPair) / incomingNode.getDegree();
+				}
+			}
+			
+			if (BC.containsKey(nodeIDPair)) {
+				// BC already contains summed pageRank from outside block, no need to iterate
+				newPR += BC.get(nodeIDPair);
+			}
+			
+			newPR = Constants.DAMPING_FACTOR * newPR + 
+					(1 - Constants.DAMPING_FACTOR) / Constants.NODE_NUM;
+			NPR.put(nodeIDPair, newPR);
+			
+			residual += Math.abs(oldPR - newPR) / newPR;
+		}
+		
+		return residual / nodeMap.size();
 	}
 	
 	/**
