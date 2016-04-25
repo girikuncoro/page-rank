@@ -24,8 +24,12 @@ public class BlockedReducer {
 	private HashMap<String, ArrayList<String>> BE = new HashMap<String, ArrayList<String>>();  // <u, v> ∈ BE, the Edges from Nodes in Block B
 	private HashMap<String, Double> BC = new HashMap<String, Double>();  // <u,v,R> ∈ BC, the Boundary Conditions
 	
+	Double residual = Double.MAX_VALUE;
+	
 	public void reduce(Text key, Iterable<Text> values, Context context) 
 			throws IOException, InterruptedException {
+		
+		resetDataStructure();
 		
 		String[] tokens;
 		Iterator<Text> iter = values.iterator();
@@ -49,9 +53,8 @@ public class BlockedReducer {
 		// repeatedly updates PR[v] for every v ∈ B until "in-block residual" is below threshold
 		// or it reaches N iteration
 		int iterNum = 0;
-		Double residual = Double.MAX_VALUE;
 		do {
-			iterateBlockOnce();
+			residual = iterateBlockOnce();
 			iterNum++;
 		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && residual < Constants.CONVERGENCE);
 		
@@ -96,20 +99,31 @@ public class BlockedReducer {
 		BC.put(destIDPair, currPR);
 	}
 	
-	public void iterateBlockOnce() {
-		// TODO:
-		//		void IterateBlockOnce(B) {
-		//		    for( v ∈ B ) { NPR[v] = 0; }
-		//		    for( v ∈ B ) {
-		//		        for( u where <u, v> ∈ BE ) {
-		//		            NPR[v] += PR[u] / deg(u);
-		//		        }
-		//		        for( u, R where <u,v,R> ∈ BC ) {
-		//		            NPR[v] += R;
-		//		        }
-		//		        NPR[v] = d*NPR[v] + (1-d)/N;
-		//		    }
-		//		    for( v ∈ B ) { PR[v] = NPR[v]; }
-		//		}
+	public void resetDataStructure() {
+		nodeMap.clear();
+		NPR.clear();
+		BE.clear();
+		BC.clear();
+		residual = Double.MAX_VALUE;
+	}
+	
+	/**
+	 * TODO:
+	 * void IterateBlockOnce(B) {
+		    for( v ∈ B ) { NPR[v] = 0; }
+		    for( v ∈ B ) {
+		        for( u where <u, v> ∈ BE ) {
+		            NPR[v] += PR[u] / deg(u);
+		        }
+		        for( u, R where <u,v,R> ∈ BC ) {
+		            NPR[v] += R;
+		        }
+		        NPR[v] = d*NPR[v] + (1-d)/N;
+		    }
+		    for( v ∈ B ) { PR[v] = NPR[v]; }
+		}
+	 */
+	public double iterateBlockOnce() {
+		return new Double(0.0);
 	}
 }
