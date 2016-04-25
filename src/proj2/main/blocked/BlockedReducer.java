@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Reducer.Context;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.Reducer;
 
 import proj2.main.node.Node;
 import proj2.main.util.Constants;
@@ -17,14 +20,14 @@ import proj2.main.util.Constants;
  *   (1) Updated pageRank for every node of the block
  *	 (2) Compute residuals for overall termination test
  */
-public class BlockedReducer {
+public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 	
-	private HashMap<String, Node> nodeMap = new HashMap<String, Node>();  // node stored with oldPageRank
-	private HashMap<String, Double> NPR = new HashMap<String, Double>();  // next PageRank value of Node v for v ∈ B
-	private HashMap<String, ArrayList<String>> BE = new HashMap<String, ArrayList<String>>();  // <u, v> ∈ BE, the Edges from Nodes in Block B
-	private HashMap<String, Double> BC = new HashMap<String, Double>();  // <u,v,R> ∈ BC, the Boundary Conditions
+	private Map<String, Node> nodeMap = new HashMap<String, Node>();  // node stored with oldPageRank
+	private Map<String, Double> NPR = new HashMap<String, Double>();  // next PageRank value of Node v for v ∈ B
+	private Map<String, ArrayList<String>> BE = new HashMap<String, ArrayList<String>>();  // <u, v> ∈ BE, the Edges from Nodes in Block B
+	private Map<String, Double> BC = new HashMap<String, Double>();  // <u,v,R> ∈ BC, the Boundary Conditions
 	
-	Double residual = Double.MAX_VALUE;
+	Double currResidual = Double.MAX_VALUE;
 	
 	public void reduce(Text key, Iterable<Text> values, Context context) 
 			throws IOException, InterruptedException {
@@ -50,15 +53,34 @@ public class BlockedReducer {
 			}
 		}
 		
-		// repeatedly updates PR[v] for every v ∈ B until "in-block residual" is below threshold
-		// or it reaches N iteration
+		// repeatedly updates PR[v] for every v ∈ B 
+		// until "in-block residual" is below threshold or it reaches N iteration
 		int iterNum = 0;
 		do {
-			residual = iterateBlockOnce();
+			currResidual = iterateBlockOnce();
 			iterNum++;
-		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && residual < Constants.CONVERGENCE);
+		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && currResidual > Constants.CONVERGENCE);
 		
-		// TODO: compute residual
+		
+		// emit updated pageRank for every node
+		// format: nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID
+		for (Entry<String, Node> n : nodeMap.entrySet()) {
+			Node node = n.getValue();
+			String nodeIDPair = node.getNodeIDPair();
+			Text outKey = new Text(nodeIDPair);
+			Text outValue = new Text(NPR.get(nodeIDPair).toString() + " " + node.neighborsToString());
+			
+			// hadoop will concat key to value with spaces
+			context.write(outKey, outValue);  
+			
+			// TODO: output the first/last two nodes for each block
+		}
+		
+		// total change computed by reduce task
+		// should report the sum over all nodes v in its Block, divided by B
+		double averageResidual = calculateAvgBlockResidual() * Constants.PRECISION_FACTOR;
+		Counter counter = context.getCounter(Constants.BlockedCounterEnum.BLOCKED_RESIDUAL);
+		counter.increment((long) averageResidual);
 	}
 	
 	// format: PR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID ...
@@ -104,7 +126,7 @@ public class BlockedReducer {
 		NPR.clear();
 		BE.clear();
 		BC.clear();
-		residual = Double.MAX_VALUE;
+		currResidual = Double.MAX_VALUE;
 	}
 	
 	/**
@@ -125,5 +147,22 @@ public class BlockedReducer {
 	 */
 	public double iterateBlockOnce() {
 		return new Double(0.0);
+	}
+	
+	/**
+	 * Compute average residual of this block
+	 * Residual for one node is |(PRstart(v) - PRend(v))| / PRend(v)
+	 * @return totalResidual/totalNodes  
+	 */
+	public double calculateAvgBlockResidual() {
+		Double res = new Double(0.0);
+		
+		for (Entry<String, Node> n : nodeMap.entrySet()) {
+			String nodeIDPair = n.getKey();
+			Node node = n.getValue();
+			res += Math.abs(node.getPageRank() - NPR.get(nodeIDPair)) / NPR.get(nodeIDPair);
+		}
+		
+		return res / nodeMap.size();
 	}
 }
