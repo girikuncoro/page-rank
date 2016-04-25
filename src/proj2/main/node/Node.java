@@ -26,6 +26,17 @@ public class Node {
 		if (degree > 0) emittedPageRank = pageRank / degree;
 	}
 	
+	// format: PR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID ...
+	public Node(String[] tokensPR) {
+		nodeIDPair = tokensPR[1];
+		blockID = tokensPR[1].split("-")[1];
+		pageRank = new Double(tokensPR[2]);
+		degree = tokensPR.length - 3;
+		neighbors = Arrays.copyOfRange(tokensPR, 3, tokensPR.length);
+		
+		if (degree > 0) emittedPageRank = pageRank / degree;
+	}
+	
 	public Boolean hasEdges() {
 		return degree > 0;
 	}
