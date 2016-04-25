@@ -26,6 +26,8 @@ public class TestNode {
 		for (int i = 0; i < node.getDegree(); i++) {
 			assertEquals(neighbors[i], node.getNeighbors()[i]);
 		}
+		
+		assertEquals("303743-30 303746-30 303747-30", node.neighborsToString());
 	}
 
 	@Test

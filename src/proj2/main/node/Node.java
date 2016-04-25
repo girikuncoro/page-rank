@@ -93,5 +93,14 @@ public class Node {
 		this.neighbors = neighbors;
 	}
 	
-	
+	public String neighborsToString() {
+		StringBuilder res = new StringBuilder();
+		for (int i = 0; i < neighbors.length; i++) {
+			res.append(neighbors[i]);
+			if (i < neighbors.length - 1) {
+				res.append(" ");
+			}
+		}
+		return res.toString();
+	}
 }
