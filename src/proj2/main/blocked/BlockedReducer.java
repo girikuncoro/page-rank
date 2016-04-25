@@ -27,7 +27,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 	private Map<String, ArrayList<String>> BE = new HashMap<String, ArrayList<String>>();  // <u, v> ∈ BE, the Edges from Nodes in Block B
 	private Map<String, Double> BC = new HashMap<String, Double>();  // <u,v,R> ∈ BC, the Boundary Conditions
 	
-	Double currResidual = Double.MAX_VALUE;
+	Double currAvgResidual = Double.MAX_VALUE;
 	
 	public void reduce(Text key, Iterable<Text> values, Context context) 
 			throws IOException, InterruptedException {
@@ -57,11 +57,10 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		// until "in-block residual" is below threshold or it reaches N iteration
 		int iterNum = 0;
 		do {
-			currResidual = iterateBlockOnce();
+			currAvgResidual = iterateBlockOnce();
 			iterNum++;
-		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && currResidual > Constants.CONVERGENCE);
-		
-		
+		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && currAvgResidual > Constants.CONVERGENCE);
+			
 		// emit updated pageRank for every node
 		// format: nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID
 		for (Entry<String, Node> n : nodeMap.entrySet()) {
@@ -83,7 +82,19 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		counter.increment((long) averageResidual);
 	}
 	
-	// format: PR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID ...
+	public void resetDataStructure() {
+		nodeMap.clear();
+		NPR.clear();
+		BE.clear();
+		BC.clear();
+		currAvgResidual = Double.MAX_VALUE;
+	}
+	
+	/**
+	 * Process the node and populate data structure
+	 * format: PR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID ...
+	 * @param splitted tokens
+	 */
 	public void processNode(String[] tokens) {
 		Node node = new Node(tokens);
 		nodeMap.put(node.getNodeIDPair(), node);  // oldPageRank stored here
@@ -92,9 +103,13 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		// TODO: keep track of last/first nodeID in this block
 	}
 	
-	// format: BE nodeID-blockID destNodeID-blockID
+	/**
+	 * Process the in-block neighbors coming to this node
+	 * all incoming edges should be collected
+	 * format: BE nodeID-blockID destNodeID-blockID
+	 * @param splitted tokens
+	 */
 	public void processBlockEdge(String[] tokens) {
-		// all incoming edges should be collected
 		ArrayList<String> incomingEdges = new ArrayList<String>();
 		String nodeIDPair = tokens[1];
 		String destIDPair = tokens[2];
@@ -107,7 +122,12 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		BE.put(destIDPair, incomingEdges);
 	}
 	
-	// format: BC nodeID-blockID emitPageRank destNodeID-blockID
+	/**
+	 * Process the boundary condition, sum up total pageRank coming from outside the block
+	 * the incoming pageRank is already divided over degree
+	 * format: BC nodeID-blockID emitPageRank destNodeID-blockID
+	 * @param splitted tokens
+	 */
 	public void processBoundaryCond(String[] tokens) {
 		Double currPR = new Double(0.0);
 		Double emitPR = Double.parseDouble(tokens[2]);  // v ∧ R = PR(u)/deg(u)
@@ -121,15 +141,10 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		BC.put(destIDPair, currPR);
 	}
 	
-	public void resetDataStructure() {
-		nodeMap.clear();
-		NPR.clear();
-		BE.clear();
-		BC.clear();
-		currResidual = Double.MAX_VALUE;
-	}
-	
 	/**
+	 * Updates PR[v] for every v ∈ B to reflect a single iteration of the PageRank defining equation
+	 * compute the “in-Block residual,” the residual error for the last call to IterateBlockOnce
+	 * 
 	 * void IterateBlockOnce(B) {
 		    for( v ∈ B ) { NPR[v] = 0; }
 		    for( v ∈ B ) {
