@@ -18,7 +18,9 @@ import proj2.main.node.Node;
  */
 public class BlockedMapper extends Mapper<LongWritable, Text, Text, Text> {
 	
-	public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+	public void map(LongWritable key, Text value, Context context) 
+			throws IOException, InterruptedException {
+		
 		Node node = new Node(value.toString());
 		
 		// emit the node structure, PR[v] to compute the residual in reducer
