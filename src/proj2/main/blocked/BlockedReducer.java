@@ -42,13 +42,13 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 			
 			System.out.println("Reducer input :: " + Arrays.asList(tokens));
 			
-			if (tokens[0] == "PR") {
+			if (tokens[0].equals("PR")) {
 				// the node structure with oldPageRank
 				processNode(tokens);
-			} else if (tokens[0] == "BE") {
+			} else if (tokens[0].equals("BE")) {
 				// edge in the block
 				processBlockEdge(tokens);
-			} else if (tokens[0] == "BC") {
+			} else if (tokens[0].equals("BC")) {
 				// incoming edge from outside of the block
 				processBoundaryCond(tokens);
 			} else {
