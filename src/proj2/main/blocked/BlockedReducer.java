@@ -60,6 +60,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		// until "in-block residual" is below threshold or it reaches N iteration
 		int iterNum = 0;
 		do {
+			System.out.println("Iteration number : " + iterNum);
 			currAvgResidual = iterateBlockOnce();
 			iterNum++;
 		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && currAvgResidual > Constants.CONVERGENCE);
@@ -83,6 +84,8 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		double averageResidual = calculateAvgBlockResidual() * Constants.PRECISION_FACTOR;
 		Counter counter = context.getCounter(Constants.BlockedCounterEnum.BLOCKED_RESIDUAL);
 		counter.increment((long) averageResidual);
+		
+		System.out.println("Average residual in block " + nodeMap.keySet().iterator().next().toString().split("-")[1]);
 	}
 	
 	public void resetDataStructure() {
