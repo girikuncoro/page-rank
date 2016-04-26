@@ -2,6 +2,7 @@ package proj2.main.blocked;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -39,13 +40,15 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		while (iter.hasNext()) {
 			tokens = iter.next().toString().split("\\s+");
 			
-			if (tokens[0] == "PR") {
+			System.out.println("Reducer input :: " + Arrays.asList(tokens));
+			
+			if (tokens[0].equals("PR")) {
 				// the node structure with oldPageRank
 				processNode(tokens);
-			} else if (tokens[0] == "BE") {
+			} else if (tokens[0].equals("BE")) {
 				// edge in the block
 				processBlockEdge(tokens);
-			} else if (tokens[0] == "BC") {
+			} else if (tokens[0].equals("BC")) {
 				// incoming edge from outside of the block
 				processBoundaryCond(tokens);
 			} else {
@@ -57,6 +60,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		// until "in-block residual" is below threshold or it reaches N iteration
 		int iterNum = 0;
 		do {
+			System.out.println("Iteration number : " + iterNum);
 			currAvgResidual = iterateBlockOnce();
 			iterNum++;
 		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && currAvgResidual > Constants.CONVERGENCE);
@@ -80,6 +84,8 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		double averageResidual = calculateAvgBlockResidual() * Constants.PRECISION_FACTOR;
 		Counter counter = context.getCounter(Constants.BlockedCounterEnum.BLOCKED_RESIDUAL);
 		counter.increment((long) averageResidual);
+		
+		System.out.println("Average residual in block " + nodeMap.keySet().iterator().next().toString().split("-")[1]);
 	}
 	
 	public void resetDataStructure() {

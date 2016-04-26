@@ -43,7 +43,7 @@ public class BlockedMapper extends Mapper<LongWritable, Text, Text, Text> {
 					// boundary condition, outgoing edge is in another block
 					// pageRank will be used by the other block
 					// format: BC nodeID-blockID emitPageRank destNodeID-blockID
-					context.write(mapKey, new Text("BC" + node.getNodeIDPair() + " " + node.getEmittedPageRank() + " " + m));
+					context.write(mapKey, new Text("BC " + node.getNodeIDPair() + " " + node.getEmittedPageRank() + " " + m));
 				}
 			}
 		}

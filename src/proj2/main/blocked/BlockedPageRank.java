@@ -55,7 +55,7 @@ public class BlockedPageRank {
 			job.waitForCompletion(true);
 			
 		    avgResidual = (double)job.getCounters().findCounter(Constants.BlockedCounterEnum.BLOCKED_RESIDUAL).getValue() / Constants.PRECISION_FACTOR;
-		    avgResidual /= Constants.NODE_NUM;
+		    avgResidual /= Constants.BLOCK_NUM;
 		    
 		    //Iteration 0 avg error 2.332958e+00
 		    System.out.println("Iteration " + passNum + " average error " + avgResidual);
