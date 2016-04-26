@@ -2,6 +2,7 @@ package proj2.main.blocked;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -38,6 +39,8 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		Iterator<Text> iter = values.iterator();
 		while (iter.hasNext()) {
 			tokens = iter.next().toString().split("\\s+");
+			
+			System.out.println("Reducer input :: " + Arrays.asList(tokens));
 			
 			if (tokens[0] == "PR") {
 				// the node structure with oldPageRank
