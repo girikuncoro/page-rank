@@ -19,7 +19,7 @@ public class Constants {
 	/**
 	 * Blocked PageRank 
 	 */
-	public static final int INBLOCK_MAX_ITERATION = 5;
+	public static final int INBLOCK_MAX_ITERATION = 100;
 	public static final double BLOCK_NUM = 68;
 	public static final double CONVERGENCE = 0.001;
 	public static enum BlockedCounterEnum {

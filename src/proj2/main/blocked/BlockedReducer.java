@@ -238,7 +238,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		for (Entry<String, Node> n : nodeMap.entrySet()) {
 			String nodeIDPair = n.getKey();
 			Node node = n.getValue();
-			res += Math.abs(node.getPageRank() - NPR.get(nodeIDPair)) / NPR.get(nodeIDPair);  // (PRstart - PRend) / PRend
+			res += Math.abs(node.getPageRank() - PR.get(nodeIDPair)) / PR.get(nodeIDPair);  // (PRstart - PRend) / PRend
 		}
 
 		return res / nodeMap.size();
