@@ -1,3 +1,7 @@
+##############################################################
+Blocked Page Rank: Gauss-Seidel Computation
+##############################################################
+
 Iteration 0 average error 2.800112187147059
 Iteration 0 average iteration per block 5.0
 

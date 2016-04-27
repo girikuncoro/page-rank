@@ -1,0 +1,24 @@
+##############################################################
+Blocked Page Rank: Jacobian Computation
+##############################################################
+
+Iteration 0 average error 2.7617197862941176
+Iteration 0 average iteration per block 5.0
+
+Iteration 1 average error 0.07006738360294118
+Iteration 1 average iteration per block 4.970588235294118
+
+Iteration 2 average error 0.026315385529411765
+Iteration 2 average iteration per block 4.735294117647059
+
+Iteration 3 average error 0.009402448867647059
+Iteration 3 average iteration per block 4.1911764705882355
+
+Iteration 4 average error 0.003747695764705882
+Iteration 4 average iteration per block 2.9705882352941178
+
+Iteration 5 average error 0.0013495967647058824
+Iteration 5 average iteration per block 1.8529411764705883
+
+Iteration 6 average error 7.0561875E-4
+Iteration 6 average iteration per block 1.2352941176470589
