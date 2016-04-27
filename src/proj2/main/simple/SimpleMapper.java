@@ -4,10 +4,8 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import proj2.main.util.Constants;
 
 /**
  * A Mapper that distributes the page rank value of the source node to all its destination node 
@@ -26,15 +24,11 @@ public class SimpleMapper extends Mapper<LongWritable, Text, Text, Text>{
 			// produce the page rank of this node itself, so that we can compute the residual
 			// in the reducer and retain the outgoing edges. 
 			// Format: prevPR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID......
-			context.write(ID, value);
+			context.write(ID, new Text("prevPR " + value));
 			
 			// emit the distributed page rank for every outgoing destination node
 			// Format: pageRank
 			if (degree > 0){
-				// for handling sink node
-				Counter sumCounter = context.getCounter(Constants.SimpleCounterEnum.PR_SUM);
-				sumCounter.increment((long) (pageRank * Constants.PRECISION_FACTOR));
-				
 				Double emittedPageRank = pageRank / degree;
 				for (int i = 2; i < tokens.length; i++){
 					context.write(new Text(tokens[i]), new Text(emittedPageRank.toString()));

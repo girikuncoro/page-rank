@@ -14,25 +14,23 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 	@Override
 	public void reduce(Text key, Iterable<Text> values, Context context) 
 			throws IOException, InterruptedException {
+		Double newPageRank = new Double(0.0);
 		Double oldPageRank = new Double(0.0);
 		String[] tokens;
 		Iterator<Text> iter = values.iterator();
 		StringBuilder outEdges = new StringBuilder();
-		// page rank from sink nodes
-		double totalPRfromSinkNodes = (double) context.getCounter(Constants.SimpleCounterEnum.PR_SUM).getValue();
-		double PRFromSinkNodes = (1.0 - totalPRfromSinkNodes / Constants.PRECISION_FACTOR) / Constants.NODE_NUM ;
-		Double newPageRank = new Double(PRFromSinkNodes);
-//		System.out.println("Starting page rank with PR from sink node " + newPageRank.toString());
+		String ID = "";
 		
 		while (iter.hasNext()){
 			tokens = iter.next().toString().split("\\s+");
-			// Format: pageRank
-			if (tokens.length == 1){
+			// Format: prevPR pageRank
+			if (tokens.length == 1 && !tokens[0].equals("prevPR")){
 				newPageRank += Double.parseDouble(tokens[0]);
 			}else{
 				// Format: nodeID-blockID pageRank (destNodeID-blockID destNodeID-blockID......)
-				oldPageRank = Double.parseDouble(tokens[1]);
-				for (int i = 2; i < tokens.length; i++){
+				oldPageRank = Double.parseDouble(tokens[2]);
+				ID = tokens[1];
+				for (int i = 3; i < tokens.length; i++){
 					outEdges.append(tokens[i]);
 					if (i < tokens.length - 1)
 						outEdges.append(" ");
@@ -46,7 +44,8 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 		
 		// same format as the input for mapper
 		// Format: "nodeID-blockID, pageRank (destNodeID-blockID destNodeID-blockID......)"
-		context.write(key, new Text(newPageRank.toString() + " " + outEdges.toString()));
+		Text newValue = new Text(newPageRank.toString() + " " + outEdges.toString());
+		context.write(new Text(ID), newValue);
 		
 		double residual = Math.abs(oldPageRank - newPageRank) / newPageRank * Constants.PRECISION_FACTOR;
 		Counter residualCounter = context.getCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL);

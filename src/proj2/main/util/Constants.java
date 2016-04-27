@@ -13,7 +13,7 @@ public class Constants {
 	 */
 	public static final int SIMPLE_MP_PASS_NUM = 5;
 	public static enum SimpleCounterEnum{
-		SIMPLE_RESIDUAL, PR_SUM;
+		SIMPLE_RESIDUAL;
 	}
 	
 	/**

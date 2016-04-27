@@ -1,0 +1,5 @@
+Iteration 0 average error 2.338036138444408
+Iteration 1 average error 0.32297669467638457
+Iteration 2 average error 0.19207763229971833
+Iteration 3 average error 0.09406491742335128
+Iteration 4 average error 0.06281398244773434
