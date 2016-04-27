@@ -23,10 +23,11 @@ import proj2.main.util.Constants;
 public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 
 	private Map<String, Node> nodeMap = new HashMap<String, Node>();  // node stored with oldPageRank
+	private Map<String, Double> PR = new HashMap<String, Double>();	 // current PageRank value of node v for v ∈ B
 	private Map<String, Double> NPR = new HashMap<String, Double>();  // next PageRank value of Node v for v ∈ B
 	private Map<String, ArrayList<String>> BE = new HashMap<String, ArrayList<String>>();  // <u, v> ∈ BE, the Edges from Nodes in Block B
 	private Map<String, Double> BC = new HashMap<String, Double>();  // <u,v,R> ∈ BC, the Boundary Conditions
-
+	
 	Double currAvgResidual = Double.MAX_VALUE;
 	Node lowestNode = null;
 
@@ -99,6 +100,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 
 	public void resetDataStructure() {
 		nodeMap.clear();
+		PR.clear();
 		NPR.clear();
 		BE.clear();
 		BC.clear();
@@ -114,7 +116,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 	public void processNode(String[] tokens) {
 		Node node = new Node(tokens);
 		nodeMap.put(node.getNodeIDPair(), node);  // oldPageRank stored here
-		NPR.put(node.getNodeIDPair(), node.getPageRank());  // pageRank here will be updated in iteration
+		PR.put(node.getNodeIDPair(), node.getPageRank());  // pageRank here will be updated in iteration
 
 		// keep track the lowest numbered node in this block
 		if(lowestNode == null || lowestNode.getNodeID().compareTo(node.getNodeID()) > 0) {
@@ -186,16 +188,20 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 	public double iterateBlockOnce() {
 		String nodeIDPair;
 		Double residual = new Double(0.0);
+		
+		for (Entry<String, Node> n : nodeMap.entrySet()) {
+			nodeIDPair = n.getKey();
+			NPR.put(nodeIDPair, 0.0);
+		}
 
 		for (Entry<String, Node> n : nodeMap.entrySet()) {
 			nodeIDPair = n.getKey();
-			Double prevPR = NPR.get(nodeIDPair);
-			Double newPR = new Double(0.0);
+			Double newPR = NPR.get(nodeIDPair);
 
 			if (BE.containsKey(nodeIDPair)) {
 				for (String incomingIDPair : BE.get(nodeIDPair)) {
 					Node incomingNode = nodeMap.get(incomingIDPair);
-					newPR += NPR.get(incomingIDPair) / incomingNode.getDegree();
+					newPR += PR.get(incomingIDPair) / incomingNode.getDegree();
 				}
 			}
 
@@ -207,7 +213,14 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 			newPR = Constants.DAMPING_FACTOR * newPR + 
 					(1 - Constants.DAMPING_FACTOR) / Constants.NODE_NUM;
 			NPR.put(nodeIDPair, newPR);
-
+		}
+		
+		for (Entry<String, Node> n : nodeMap.entrySet()) {
+			nodeIDPair = n.getKey();
+			Double prevPR = PR.get(nodeIDPair);
+			Double newPR = NPR.get(nodeIDPair);
+			
+			PR.put(nodeIDPair, newPR);
 			residual += Math.abs(prevPR - newPR) / newPR;
 		}
 
