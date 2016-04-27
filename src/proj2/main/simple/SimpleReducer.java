@@ -23,7 +23,7 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 		
 		while (iter.hasNext()){
 			tokens = iter.next().toString().split("\\s+");
-			// Format: pageRank
+			// Format: prevPR pageRank
 			if (tokens.length == 1 && !tokens[0].equals("prevPR")){
 				newPageRank += Double.parseDouble(tokens[0]);
 			}else{
