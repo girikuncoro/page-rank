@@ -1,7 +1,6 @@
 package proj2.main.simple;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.Iterator;
 
 import proj2.main.util.*;

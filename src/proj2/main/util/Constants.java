@@ -23,6 +23,6 @@ public class Constants {
 	public static final double BLOCK_NUM = 68;
 	public static final double CONVERGENCE = 0.001;
 	public static enum BlockedCounterEnum {
-		BLOCKED_RESIDUAL;
+		BLOCKED_RESIDUAL, N_ITERATION;
 	}
 }
