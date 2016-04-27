@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 public class Node {
 	private String nodeIDPair;
+	private String nodeID;
 	private String blockID;
 	private Double pageRank;
 	private int degree;
@@ -18,6 +19,7 @@ public class Node {
 		}
 		
 		nodeIDPair = tokens[0];
+		nodeID = tokens[0].split("-")[0];
 		blockID = tokens[0].split("-")[1];
 		pageRank = new Double(tokens[1]);
 		degree = tokens.length - 2;
@@ -29,6 +31,7 @@ public class Node {
 	// format: PR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID ...
 	public Node(String[] tokensPR) {
 		nodeIDPair = tokensPR[1];
+		nodeID = tokensPR[1].split("-")[0];
 		blockID = tokensPR[1].split("-")[1];
 		pageRank = new Double(tokensPR[2]);
 		degree = tokensPR.length - 3;
@@ -51,6 +54,14 @@ public class Node {
 
 	public void setNodeIDPair(String nodeIDPair) {
 		this.nodeIDPair = nodeIDPair;
+	}
+	
+	public String getNodeID() {
+		return nodeID;
+	}
+
+	public void setNodeID(String nodeID) {
+		this.nodeID = nodeID;
 	}
 
 	public String getBlockID() {
