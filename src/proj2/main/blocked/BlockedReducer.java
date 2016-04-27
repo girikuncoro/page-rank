@@ -40,7 +40,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		while (iter.hasNext()) {
 			tokens = iter.next().toString().split("\\s+");
 			
-			System.out.println("Reducer input :: " + Arrays.asList(tokens));
+//			System.out.println("Reducer input :: " + Arrays.asList(tokens));
 			
 			if (tokens[0].equals("PR")) {
 				// the node structure with oldPageRank
@@ -60,7 +60,6 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		// until "in-block residual" is below threshold or it reaches N iteration
 		int iterNum = 0;
 		do {
-			System.out.println("Iteration number : " + iterNum);
 			currAvgResidual = iterateBlockOnce();
 			iterNum++;
 		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && currAvgResidual > Constants.CONVERGENCE);
@@ -85,7 +84,11 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		Counter counter = context.getCounter(Constants.BlockedCounterEnum.BLOCKED_RESIDUAL);
 		counter.increment((long) averageResidual);
 		
-		System.out.println("Average residual in block " + nodeMap.keySet().iterator().next().toString().split("-")[1]);
+		// should report average number of iterations per block
+		Counter iterCounter = context.getCounter(Constants.BlockedCounterEnum.N_ITERATION);
+		iterCounter.increment((long) iterNum);
+		
+//		System.out.println("Average residual in block " + nodeMap.keySet().iterator().next().toString().split("-")[1]);
 	}
 	
 	public void resetDataStructure() {
@@ -176,7 +179,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		
 		for (Entry<String, Node> n : nodeMap.entrySet()) {
 			nodeIDPair = n.getKey();
-			Double oldPR = NPR.get(nodeIDPair);
+			Double prevPR = NPR.get(nodeIDPair);
 			Double newPR = new Double(0.0);
 			
 			if (BE.containsKey(nodeIDPair)) {
@@ -195,7 +198,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 					(1 - Constants.DAMPING_FACTOR) / Constants.NODE_NUM;
 			NPR.put(nodeIDPair, newPR);
 			
-			residual += Math.abs(oldPR - newPR) / newPR;
+			residual += Math.abs(prevPR - newPR) / newPR;
 		}
 		
 		return residual / nodeMap.size();
@@ -212,7 +215,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		for (Entry<String, Node> n : nodeMap.entrySet()) {
 			String nodeIDPair = n.getKey();
 			Node node = n.getValue();
-			res += Math.abs(node.getPageRank() - NPR.get(nodeIDPair)) / NPR.get(nodeIDPair);
+			res += Math.abs(node.getPageRank() - NPR.get(nodeIDPair)) / NPR.get(nodeIDPair);  // (PRstart - PRend) / PRend
 		}
 		
 		return res / nodeMap.size();

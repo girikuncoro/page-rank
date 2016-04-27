@@ -28,6 +28,8 @@ public class BlockedPageRank {
 		
 		int passNum = 0;
 		double avgResidual = Double.MAX_VALUE;
+		long totalIteration = 0;
+		double avgIteration = 0.0;
 		
 		// run map reduce pass until convergence
 		do {
@@ -57,8 +59,13 @@ public class BlockedPageRank {
 		    avgResidual = (double)job.getCounters().findCounter(Constants.BlockedCounterEnum.BLOCKED_RESIDUAL).getValue() / Constants.PRECISION_FACTOR;
 		    avgResidual /= Constants.BLOCK_NUM;
 		    
-		    //Iteration 0 avg error 2.332958e+00
+		    totalIteration = job.getCounters().findCounter(Constants.BlockedCounterEnum.N_ITERATION).getValue();
+		    avgIteration = totalIteration * 1.0 / Constants.BLOCK_NUM;
+		    
+		    // Iteration 0 average error 2.332958e+00
 		    System.out.println("Iteration " + passNum + " average error " + avgResidual);
+		    // Iteration 0 average iteration per block 4.222
+		    System.out.println("Iteration " + passNum + " average iteration per block " + avgIteration);
 		    passNum++;
 			
 		} while (avgResidual > Constants.CONVERGENCE);
