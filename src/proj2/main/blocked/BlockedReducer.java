@@ -117,7 +117,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		NPR.put(node.getNodeIDPair(), node.getPageRank());  // pageRank here will be updated in iteration
 
 		// keep track the lowest numbered node in this block
-		if(lowestNode == null || lowestNode.getNodeID().compareTo(node.getNodeID()) > 1) {
+		if(lowestNode == null || lowestNode.getNodeID().compareTo(node.getNodeID()) > 0) {
 			lowestNode = node; 
 		} 
 	}
