@@ -3,5 +3,7 @@ bin/
 .project
 .settings
 launch.sh
-data/
+data/nodepairs.txt
+data/processed_edges.txt
+data/sample.txt
 .DS_Store
