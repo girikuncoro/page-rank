@@ -1,0 +1,26 @@
+##############################################################
+Blocked Page Rank: Gauss-Seidel Computation
+100 Max Iteration per Block
+(Run in-block iteration until convergence)
+##############################################################
+
+Iteration 0 average error 2.8111371720441176
+Iteration 0 average iteration per block 9.205882352941176
+
+Iteration 1 average error 0.0386565384117647
+Iteration 1 average iteration per block 5.294117647058823
+
+Iteration 2 average error 0.02520986332352941
+Iteration 2 average iteration per block 4.573529411764706
+
+Iteration 3 average error 0.010987682911764706
+Iteration 3 average iteration per block 3.3529411764705883
+
+Iteration 4 average error 0.004795936602941177
+Iteration 4 average iteration per block 2.3088235294117645
+
+Iteration 5 average error 0.0019084137352941178
+Iteration 5 average iteration per block 1.7058823529411764
+
+Iteration 6 average error 8.154982794117648E-4
+Iteration 6 average iteration per block 1.3088235294117647
