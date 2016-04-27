@@ -2,7 +2,6 @@ package proj2.main.blocked;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,8 +39,6 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		Iterator<Text> iter = values.iterator();
 		while (iter.hasNext()) {
 			tokens = iter.next().toString().split("\\s+");
-
-			//			System.out.println("Reducer input :: " + Arrays.asList(tokens));
 
 			if (tokens[0].equals("PR")) {
 				// the node structure with oldPageRank
@@ -90,12 +87,12 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		// show page rank value for two lowest-numbered nodes
 		System.out.println("Block " + lowestNode.getBlockID() + 
 						   " node " + lowestNode.getNodeID() + 
-						   " pageRank: " + NPR.get(lowestNode.getPageRank()));
+						   " pageRank: " + NPR.get(lowestNode.getNodeIDPair()));
 		
 		String nextLowestNodeID = "" + (Integer.parseInt(lowestNode.getNodeID()) + 1);
 		System.out.println("Block " + lowestNode.getBlockID() + 
 						   " node " + nextLowestNodeID + 
-						   " pageRank: " + NPR.get(nextLowestNodeID));
+						   " pageRank: " + NPR.get(nextLowestNodeID + "-" + lowestNode.getBlockID()));
 		
 		//		System.out.println("Average residual in block " + nodeMap.keySet().iterator().next().toString().split("-")[1]);
 	}
@@ -106,6 +103,7 @@ public class BlockedReducer extends Reducer<Text, Text, Text, Text> {
 		BE.clear();
 		BC.clear();
 		currAvgResidual = Double.MAX_VALUE;
+		lowestNode = null;
 	}
 
 	/**
