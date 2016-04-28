@@ -47,9 +47,18 @@ public class TopologicalSort {
 	public static ArrayList<Node> sort(Map<String, Node> nodeMap) {
 		ArrayList<Node> res = new ArrayList<Node>();
 		HashSet<Node> noIncoming = new HashSet<Node>();
+		int minInDegree = Integer.MAX_VALUE;
+		
 		for (Entry<String, Node> e : nodeMap.entrySet()) {
 			Node node = e.getValue();
-			if (node.getInDegree() == 0) {
+			if (node.getInDegree() < minInDegree) {
+				minInDegree = node.getInDegree();
+			}
+		}
+		
+		for (Entry<String, Node> e : nodeMap.entrySet()) {
+			Node node = e.getValue();
+			if (node.getInDegree() == minInDegree) {
 				noIncoming.add(node);
 			}
 		}
