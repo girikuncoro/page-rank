@@ -23,8 +23,8 @@ public class SimpleMapper extends Mapper<LongWritable, Text, Text, Text>{
 			
 			// produce the page rank of this node itself, so that we can compute the residual
 			// in the reducer and retain the outgoing edges. 
-			// Format: prevPR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID......
-			context.write(ID, new Text("prevPR " + value));
+			// Format: nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID......
+			context.write(ID, value);
 			
 			// emit the distributed page rank for every outgoing destination node
 			// Format: pageRank

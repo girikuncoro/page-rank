@@ -19,18 +19,16 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 		String[] tokens;
 		Iterator<Text> iter = values.iterator();
 		StringBuilder outEdges = new StringBuilder();
-		String ID = "";
 		
 		while (iter.hasNext()){
 			tokens = iter.next().toString().split("\\s+");
-			// Format: prevPR pageRank
-			if (tokens.length == 1 && !tokens[0].equals("prevPR")){
+			// Format: pageRank
+			if (tokens.length == 1){
 				newPageRank += Double.parseDouble(tokens[0]);
 			}else{
 				// Format: nodeID-blockID pageRank (destNodeID-blockID destNodeID-blockID......)
-				oldPageRank = Double.parseDouble(tokens[2]);
-				ID = tokens[1];
-				for (int i = 3; i < tokens.length; i++){
+				oldPageRank = Double.parseDouble(tokens[1]);
+				for (int i = 2; i < tokens.length; i++){
 					outEdges.append(tokens[i]);
 					if (i < tokens.length - 1)
 						outEdges.append(" ");
@@ -45,7 +43,7 @@ public class SimpleReducer extends Reducer<Text, Text, Text, Text> {
 		// same format as the input for mapper
 		// Format: "nodeID-blockID, pageRank (destNodeID-blockID destNodeID-blockID......)"
 		Text newValue = new Text(newPageRank.toString() + " " + outEdges.toString());
-		context.write(new Text(ID), newValue);
+		context.write(key, newValue);
 		
 		double residual = Math.abs(oldPageRank - newPageRank) / newPageRank * Constants.PRECISION_FACTOR;
 		Counter residualCounter = context.getCounter(Constants.SimpleCounterEnum.SIMPLE_RESIDUAL);
