@@ -23,13 +23,24 @@ Additionally, we processed the edge file into a node-centric one so that it can 
 
 The python code for this is in `preprocess/process_nodes.py`. To run it, `cd` to the directory where process_nodes.py is, put `blocks.txt` and the filtered edge file in the same directory, then run `python process_nodes.py <edge-file> <block-file> <output-file>`.
 
-### 3.3 Random Block Partition
+### 2.3 Random Block Partition
 
 To compute a bad partition for the graph, we assigned a node to a block based on the value of `nodeID % totalBlocks` where totalBlcoks is 68. This ensures that blocks are uniformly sized.
 
 The python code for this is in `preprocess/process_nodes_random.py`. To run it, `cd` to the directory where process_nodes_random.py is, put the filtered edge file in the same directory, then run `python process_nodes_random.py <edge-file> <block-file> <output-file>`.
 
-## 3. Simple Computation of PageRank
+## 3. Helper Classes
+
+`src/proj2/main/node/Node.java`:
+
+* Includes meta data about a node to make extracting information easier: nodeID-blockID, nodeID, blockID, currentPageRank, degree, emittedPageRank, and an array of destination nodes
+* Not for simple computation
+
+`src/proj2/main/util/Constants.java`:
+
+* Defines constant values used in this project, including damping factor, total node number, total block number, pass number for simple computation, convergence threhold, and enumerations for Hadoop counters
+
+## 4. Simple Computation of PageRank
 
 `src/proj2/main/simple` package:
 
@@ -43,12 +54,12 @@ The python code for this is in `preprocess/process_nodes_random.py`. To run it, 
 	* Emits < destNodeID-blockID, outgoingPageRank> for every outgoing edge
 * SimpleReducer.java
 	* Updates the PageRank value for a node based on the PageRank values of its immediate neighbors, using the formula `(1-d)/N + d * sum (<PRt(u)/degree(u)>)` where d = 0.85 and N = 685230
-	* Emits < nodeID-blockID, node entry with updated PageRank and reconstructed adjancency list >
+	* Emits < nodeID-blockID, updated PageRank and reconstructed adjancency list >
 	* Adds the residual for this node |(PR<sup>t</sup>(u) - PR<sup>t+1</sup>(u))| / PR<sup>t+1</sup>(u) to a residual counter
 
 ==The average residual errors in each MapReduce pass are as the following:==
 
-## 4. Jacobi Blocked Computation of PageRank
+## 5. Jacobi Blocked Computation of PageRank
 
 `src/proj2/main/blocked` package:
 
@@ -56,19 +67,31 @@ The python code for this is in `preprocess/process_nodes_random.py`. To run it, 
 	* Sets the input and output path accordingly
 	* Runs MapReduce passes until reaching convergence where the average relative residual error is below 0.001
 	* Computes average relative residual and average number of iterations per block for each reduce task by using two Hadoop Counters
-	* The relative residual error reflects the difference of a node's PageRank value before and after internal block iterations
+	* Reports the PageRank value for two lowest-numbered notes in each block after the entire computation converged
 * BlockedMapper.java
-	* Emits < src-blockID, node entry > to compute residual in reducer and reconstruct node structure
+	* Emits < src-blockID, PR node entry > to compute residual in reducer and reconstruct node structure
 	* Emits < dest-blockID, BE srcNodeID-blockID destNodeID-blockID > for every destionation node in the same block as the source node
 	* Emits < dest-blockID, BC srcNodeID-blockID emittedPageRank destNodeID-blockID > for every destionation node not in the same block as the source node
 * BlockedReducer.java
-	* 
+	* Parse the input values and store in five HashMaps accordingly
+	* Performs in-block iterations until the in-block residual for the last iteration reaches convergence threshold 0.001
+	* Emits < nodeID-blockID, updated PageRank value and reconstructed adjancency list >
+	* Add the entire block reducer residual to a residual counter
+	* The relative residual error reflects the difference of a node's PageRank value before and after internal block iterations: |(PR<sup>start</sup>(v) - PR<sup>end</sup>(v))| / PR<sup>end</sup>(v)
+	* Add the number of iterations in this block to an iteration counter
 
 ==The result of this version is as the following==
-## 5. Gauss-Seidel Computation of PageRank
+## 6. Gauss-Seidel Computation of PageRank
 
 `src/proj2/main/gauss` package:
 
-## 6. ==Random Block Partition==
+* GaussPageRank.java
+	* This is the same as the BlockedPageRank.java 
+* GaussMapper.java
+	* This is the same as the BlocedMapper.java
+* GaussReducer.java
+	* 
+
+## 7. ==Random Block Partition==
 
 ## Appendix
