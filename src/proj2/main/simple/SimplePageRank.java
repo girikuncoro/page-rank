@@ -14,14 +14,22 @@ import proj2.main.util.Constants;
 public class SimplePageRank {
 
 	public static void main(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
-		if (args.length != 2){
+		if (args.length < 2){
 			throw new IllegalArgumentException("Please specify the input and output path"); 
+		}else if (args.length > 3){
+			throw new IllegalArgumentException("Accept at most three arguments: inputPath outputPath iterationNumber");
+		}
+		
+		// for grader
+		int iterationNum = Constants.SIMPLE_MP_PASS_NUM;
+		if (args.length == 3){
+			iterationNum = Integer.parseInt(args[2]);
 		}
 		
 		String inputPath = args[0];
 		String outputPath = args[1];
 		
-		for (int i = 0; i < Constants.SIMPLE_MP_PASS_NUM; i++){
+		for (int i = 0; i < iterationNum; i++){
 			// create a new job
 			Configuration conf = new Configuration();
 		    Job job = Job.getInstance(conf, "PageRank " + i);

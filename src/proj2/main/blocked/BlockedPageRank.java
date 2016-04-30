@@ -19,12 +19,20 @@ import proj2.main.util.Constants;
 public class BlockedPageRank {
 
 	public static void main(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
-		if (args.length != 2){
+		if (args.length < 2){
 			throw new IllegalArgumentException("Please specify the input and output path"); 
+		}else if (args.length > 3){
+			throw new IllegalArgumentException("Accept at most three arguments: inputPath outputPath iterationNumber");
 		}
 
 		String inputPath = args[0];
 		String outputPath = args[1];
+		
+		// for grader
+		int iterationNum = Integer.MAX_VALUE;
+		if (args.length == 3){
+			iterationNum = Integer.parseInt(args[2]);
+		}
 		
 		int passNum = 0;
 		double avgResidual = Double.MAX_VALUE;
@@ -68,6 +76,6 @@ public class BlockedPageRank {
 		    System.out.println("Iteration " + passNum + " average iteration per block " + avgIteration);
 		    passNum++;
 			
-		} while (avgResidual > Constants.CONVERGENCE);
+		} while (avgResidual > Constants.CONVERGENCE && passNum < iterationNum);
 	}
 }
