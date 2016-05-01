@@ -1,6 +1,5 @@
 ##############################################################
 Blocked Page Rank: Jacobian Computation
-100 Max Iteration per Block
 (Run in-block iteration until convergence)
 ##############################################################
 
