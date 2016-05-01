@@ -186,11 +186,11 @@ The results show that Gauss-Seidel Computation takes less number of in-block ite
 |5|Average error|9.506281323529412E-4| 0.03344842155882353 |
 |5|Average iteration/block| 1.338235294117647 |2.0|
 
-Compared to the result based on METIS, the Jacobi Computation based on a random partition converges much slower. Actually, it converges as slow as simple computation.
+Compared to the result based on METIS, the Jacobi Computation based on a random partition converges much slower. Actually, it converges as slow as simple computation. This concludes that blockedPageRank only performs good in a good partition of block. It will have similar performance to SimplePageRank in a bad partitioned nodes, since the nodes will still be computed as node by node, in-block edges and boundary conditions are not reachable, the reducer will be getting a bunch of isolated in-blocks from the mapper.
 
 ### 7.2 Convergence Performance for Gauss-Seidel Reducer using METIS partition and a random partion
 
-|Iteration|Content| Gauss-Seidel MEITS| Gauss-Seidel Random|
+|Iteration|Content| Gauss-Seidel METIS| Gauss-Seidel Random|
 |:---------:|:-------:|:--------------:|:-------:|
 |0|Average error| 2.8109963380735294 | 2.3386887671911762 |
 |0|Average iteration/block| 9.308823529411764 | 2.514705882352941 |
@@ -207,4 +207,4 @@ Compared to the result based on METIS, the Jacobi Computation based on a random 
 |6|Average error| 7.902894411764706E-4 | 0.026807231970588236 |
 |6|Average iteration/block| 1.3088235294117647 |2.0|
 
-==Comparison==
+The random partition performance for Gauss-Seidel is the same as random performance in Jacobi, that is, it has slow performance similar to SimplePageRank. This due to similar reason: in bad partitioned block, reducer will be getting a bunch of isolated in-blocks nodes without reachable in-block edges and boundary values. Thus, no matter what BlockPageRank algorithm we are using, for either Jacobi or Gauss-Seidel, blockPageRank only performs better in a good partitioned nodes. 
