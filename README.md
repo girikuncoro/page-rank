@@ -145,8 +145,9 @@ The PageRank values for the two lowest-numbered nodes in each block are in `resu
 	* This is the same as the BlockedPageRank.java 
 * GaussMapper.java
 	* This is the same as the BlockedMapper.java
-* ==GaussReducer.java==
-	* 
+* GaussReducer.java  
+	* Overall functionality is similar to `BlockedMapper.java` (Jacobi version), including parse emitted output from Mapper, perform in-block iteration, and calculating in-block residual. However, in the `iterateBlockOnce` method, instead of updating newPageRank values in the end of every iteration, it updates values right after the newPageRank is computed. And when summing up the incoming edges, we get the pageRank values from the newest one, instead of value before the in-block iteration loop, like what Jacobi did. Thus, by this approach we would be able to compute using updated pageRank values whenever possible.
+	* We attempted Topological sort in order to compute even faster using the maximum differences between inDegree and outDegree for each node to handle cycle and isolated nodes (typically naive topological sort can only compute DAG graph). However, the pageRank computation converges in 9 passes, which is not valid, thus we didn't include it in the deliverables.
 
 The average error and average in-block iteration number per block for each MapReduce pass of this version is as the following table:
 
@@ -161,6 +162,10 @@ The average error and average in-block iteration number per block for each MapRe
 |6| 7.902894411764706E-4 | 1.3088235294117647
 
 The PageRank values for the two lowest-numbered nodes in each block are in `result/gauss_pagerank_values.txt`.
+
+**Comparison Jacobi vs Gauss-Seide**  
+
+
 
 The results show that Gauss-Seidel Computation takes less number of in-block iteration to converge, particularly for the first three MapReduce passes.
 
