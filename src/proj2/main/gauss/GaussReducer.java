@@ -55,7 +55,7 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 				throw new IOException("Invalid input from the mapper, should be PR, BE, or BC");
 			}
 		}
-		
+
 		for(Entry<String, Set<String>> entry : BE.entrySet())
 			nodeMap.get(entry.getKey()).setIndegreeWithinBlock(entry.getValue());
 
@@ -193,10 +193,10 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 		String nodeIDPair;
 		Double residual = new Double(0.0);
 
-//		for (Entry<String, Node> n : nodeMap.entrySet()) {
-		for (Node n : TopologicalSort.sort(nodeMap)) {
-//			nodeIDPair = n.getKey();
-			nodeIDPair = n.getNodeIDPair();
+		for (Entry<String, Node> n : nodeMap.entrySet()) {
+//		for (Node n : TopologicalSort.sort(nodeMap)) {
+			nodeIDPair = n.getKey();
+//			nodeIDPair = n.getNodeIDPair();
 			Double prevPR = NPR.get(nodeIDPair);
 			Double newPR = new Double(0.0);
 

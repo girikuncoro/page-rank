@@ -18,6 +18,7 @@ public class Node {
 	
 	private Set<String> outDegreeWithinBlock;
 	private Set<String> inDegreeWithinBlock;
+	private String[] originalInNeighbors;
 
 	public Node(String value) throws IOException {
 		String[] tokens = value.toString().split("\\s+");
@@ -47,6 +48,10 @@ public class Node {
 		pageRank = new Double(tokensPR[2]);
 		outDegree = tokensPR.length - 3;
 		neighbors = Arrays.copyOfRange(tokensPR, 3, tokensPR.length);
+		
+		outDegreeWithinBlock = new HashSet<String>();
+		for(String n : neighbors)
+			if(Node.getBlockID(n).equals(blockID)) outDegreeWithinBlock.add(n);
 		
 		if (outDegree > 0) emittedPageRank = pageRank / outDegree;
 	}
@@ -143,27 +148,40 @@ public class Node {
 	}
 	
 	public Set<String> getOutdegreeWithinBlock() {
+		if(outDegreeWithinBlock == null) outDegreeWithinBlock = new HashSet<String>();
 		return outDegreeWithinBlock;
 	}
 	
 	public void setIndegreeWithinBlock(Set<String> inDegrees) {
 		inDegreeWithinBlock = inDegrees;
+		originalInNeighbors = inDegreeWithinBlock.toArray(new String[inDegreeWithinBlock.size()]);
 	}
 	
 	public Set<String> getIndegreeWithinBlock() {
+		if(inDegreeWithinBlock == null) inDegreeWithinBlock = new HashSet<String>();
 		return inDegreeWithinBlock;
 	}
 	
 	public void removeFromOutdegreeWithinBlock(String nodeID) {
-		outDegreeWithinBlock.remove(nodeID);
+		if(outDegreeWithinBlock.contains(nodeID))
+			outDegreeWithinBlock.remove(nodeID);
 	}
 	
 	public void removeFromIndegreeWithinBlock(String nodeID) {
-		inDegreeWithinBlock.remove(nodeID);
+		if(inDegreeWithinBlock.contains(nodeID))
+			inDegreeWithinBlock.remove(nodeID);
 	}
 
 	@Override
 	public String toString() {
 		return "Node [nodeIDPair=" + nodeIDPair + "]";
 	}
+	
+//	public String toString() {
+//		return "Node [nodeIDPair=" + nodeIDPair + ", nodeID=" + nodeID + ", blockID=" + blockID + ", pageRank="
+//				+ pageRank + ", outDegree=" + outDegree + ", inDegree=" + inDegree + ", emittedPageRank="
+//				+ emittedPageRank + ", neighbors=" + Arrays.toString(neighbors) + ", outDegreeWithinBlock="
+//				+ outDegreeWithinBlock + ", inDegreeWithinBlock=" + inDegreeWithinBlock + ", originalInNeighbors="
+//				+ Arrays.toString(originalInNeighbors) + "]";
+//	}
 }
