@@ -1,4 +1,4 @@
-# CS5300 Projec 2: Fast Convergence PageRank in MapReduce
+# CS5300 Project 2: Fast Convergence PageRank in MapReduce
 
 ### Giri Kuncoro (gk256), Yihui Fu (yf263), Shibo Zang(sz428)
 
@@ -14,7 +14,7 @@ In this project, we implemented the following versions of computing PageRank val
 ## 2. Preprocessing
 
 ### 2.1 Filtering Edges
-The netID used to compute rejectMin and rejectLimit is gk256 with the reversed value being 0.652. The rejectMin is 0.5868 and the rejectLimit is 0.5968. In total, 7,524,304 edges are selected in the graph. The pre-filtered edges file is stored in our S3 bucket: [https://s3-us-west-2.amazonaws.com/edu-cornell-cs-cs5300s16-gk256/processed_edges.txt](https://s3-us-west-2.amazonaws.com/edu-cornell-cs-cs5300s16-gk256/processed_edges.txt). To download the file, type `aws s3 cp s3://edu-cornell-cs-cs5300s16-gk256/processed_edges.txt <target_file_name>` in the terminal. It's the same format as the given edges.txt, i.e, `src-node-number dest-node-number floating number`. 
+The netID used to compute rejectMin and rejectLimit is gk256 with the reversed value being 0.652. The rejectMin is 0.5868 and the rejectLimit is 0.5968. In total, 7,524,304 out of 7,600,595 edges are selected in the graph, so we removed approximately 1% of the total edges. The pre-filtered edges file is stored in our S3 bucket: [https://s3-us-west-2.amazonaws.com/edu-cornell-cs-cs5300s16-gk256/processed_edges.txt](https://s3-us-west-2.amazonaws.com/edu-cornell-cs-cs5300s16-gk256/processed_edges.txt). To download the file, type `aws s3 cp s3://edu-cornell-cs-cs5300s16-gk256/processed_edges.txt <target_file_name>` in the terminal. It's the same format as the given edges.txt, i.e, `src-node-number dest-node-number floating number`. 
 
 The Python code used for filtering is in `preprocess/process_edges.py`. To run it, `cd` to the directory where process_edges.py is, put `edges.txt` in the same directory, then run `python process_edges.py <input-file> <output-file>`.
 
@@ -42,7 +42,7 @@ The python code for this is in `preprocess/process_nodes_random.py`. To run it, 
 * Defines constant values used in this project, including damping factor, total node number, total block number, pass number for simple computation, convergence threhold, and enumerations for Hadoop counters
 * Please include this file when compling code for every version of computation
 
-### 3.2 External Jar
+### 3.2 External Jar Dependencies
 
 Official jar files downloaded from [Hadoop distribution](http://mirrors.gigenet.com/apache/hadoop/common/hadoop-2.7.2/)
 
@@ -50,7 +50,31 @@ Official jar files downloaded from [Hadoop distribution](http://mirrors.gigenet.
 * hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-core-2.7.2.jar
 
 ### 3.3 Project Jar File
-In case the submitted source code cannot be compiled, we exported a jar file for the project and included it in the submission. To run a certain version, for example, type `hadoop jar <jar-file> proj2.main.simple.SimplePageRank <input-path> <output path>` in the terminal. You may add the number of MapReduce pass you want to run as the third argument after `<output path>` .
+In case the submitted source code cannot be compiled, we exported a jar file for the project and included it in the submission. To run a certain version, for example, type `hadoop jar <jar-file> proj2.main.simple.SimplePageRank <input-path> <output path>` in the terminal. You may add the number of MapReduce pass you want to run as the third argument after `<output path>`.
+
+***How to run:***  
+Required files: `nodepairs.txt` (for METIS block partition) and `nodepairsRandom.txt` (for Random block partition) downloaded from our S3 bucket, see section 2 for instruction.
+
+**SimplePageRank**  
+`$ hadoop jar <jar-file> proj2.main.simple.SimplePageRank <input-path> <output-path> <number-of-passes (Optional)>`  
+
+For example if I put the `nodepairs.txt` file on hdfs input, I can type: `hadoop jar pagerank.jar proj2.main.simple.SimplePageRank input output 3`
+If the `<number-of-passes>` argument is not specified, 5 MapReduce passes will be run as default.
+
+**Jacobi BlockedPageRank**  
+`$ hadoop jar <jar-file> proj2.main.blocked.BlockedPageRank <input-path> <output-path> <number-of-passes (Optional)>`  
+
+For example: `hadoop jar pagerank.jar proj2.main.blocked.BlockedPageRank input output 3` to run 3 MapReduce passes.
+If the `<number-of-passes>` argument is not specified, MapReduce will run until convergence. If user specifies more than required passes to convergence, it will stop when it converges.
+
+**Gauss-Seidel BlockedPageRank**  
+`$ hadoop jar <jar-file> proj2.main.gauss.GaussPageRank <input-path> <output-path> <number-of-passes (Optional)>`  
+
+For example: `hadoop jar pagerank.jar proj2.main.gauss.GaussPageRank input output 3` to run 3 MapReduce passes.
+If the `<number-of-passes>` argument is not specified, MapReduce will run until convergence. If user specifies more than required passes to convergence, it will stop when it converges.
+
+**Random Block Partition**  
+This can be run on both Jacobi and Gauss-Seidel Blocked PageRank, just simply change the input to `nodepairsRandom.txt` and run the same command for each algorithm you want to run.
 
 ## 4. Simple Computation of PageRank
 
@@ -58,7 +82,7 @@ In case the submitted source code cannot be compiled, we exported a jar file for
 
 * SimplePageRank.java
 	* Sets the input and output path accordingly
-	* Runs 5 MapReduce passes 
+	* Runs 5 MapReduce passes as default
 	* Initializes a MapReduce job for each MapReduce pass
 	* Computes per iteration average residual using a Hadoop Counter
 * SimpleMapper.java
