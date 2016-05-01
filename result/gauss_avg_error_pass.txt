@@ -1,5 +1,5 @@
 ##############################################################
-Blocked Page Rank: Gauss-Seidel Computation
+Gauss-Seidel Page Rank: Gauss-Seidel Computation on METIS partition
 (Run in-block iteration until convergence)
 ##############################################################
 

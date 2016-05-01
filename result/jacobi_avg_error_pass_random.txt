@@ -1,3 +1,8 @@
+##############################################################
+Jacobi Page Rank: Jacobi Computation on Random Partition
+(Run in-block iteration until convergence)
+##############################################################
+
 Iteration 0 average error 2.3386830244264702
 Iteration 0 average iteration per block 3.0
 Iteration 1 average error 0.32240249805882354

@@ -1,3 +1,8 @@
+##############################################################
+Gauss-Seidel Page Rank: Gauss-Seidel Computation on Random Partition
+(Run in-block iteration until convergence)
+##############################################################
+
 Iteration 0 average error 2.3386887671911762
 Iteration 0 average iteration per block 2.514705882352941
 Iteration 1 average error 0.32242048685294117
