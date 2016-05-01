@@ -3,9 +3,12 @@ package proj2.main.gauss;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
@@ -22,10 +25,10 @@ import proj2.main.util.Constants;
  */
 public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 
-	private Map<String, Node> nodeMap = new HashMap<String, Node>();  // node stored with oldPageRank
-	private Map<String, Double> NPR = new HashMap<String, Double>();  // next PageRank value of Node v for v ∈ B
-	private Map<String, ArrayList<String>> BE = new HashMap<String, ArrayList<String>>();  // <u, v> ∈ BE, the Edges from Nodes in Block B
-	private Map<String, Double> BC = new HashMap<String, Double>();  // <u,v,R> ∈ BC, the Boundary Conditions
+	static private Map<String, Node> nodeMap = new HashMap<String, Node>();  // node stored with oldPageRank
+	static private Map<String, Double> NPR = new HashMap<String, Double>();  // next PageRank value of Node v for v ∈ B
+	static private Map<String, Set<String>> BE = new HashMap<String, Set<String>>();  // <u, v> ∈ BE, the Edges from Nodes in Block B
+	static private Map<String, Double> BC = new HashMap<String, Double>();  // <u,v,R> ∈ BC, the Boundary Conditions
 
 	Double currAvgResidual = Double.MAX_VALUE;
 	Node lowestNode = null;
@@ -53,6 +56,9 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 				throw new IOException("Invalid input from the mapper, should be PR, BE, or BC");
 			}
 		}
+		
+		for(Entry<String, Set<String>> entry : BE.entrySet())
+			nodeMap.get(entry.getKey()).setIndegreeWithinBlock(entry.getValue());
 
 		// repeatedly updates PR[v] for every v ∈ B 
 		// until "in-block residual" is below threshold or it reaches N iteration
@@ -128,7 +134,7 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 	 * @param splitted tokens
 	 */
 	public void processBlockEdge(String[] tokens) {
-		ArrayList<String> incomingEdges = new ArrayList<String>();
+		Set<String> incomingEdges = new HashSet<String>();
 		String nodeIDPair = tokens[1];
 		String destIDPair = tokens[2];
 

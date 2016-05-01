@@ -1,17 +1,25 @@
 package proj2.main.node;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Node {
 	private String nodeIDPair;
 	private String nodeID;
 	private String blockID;
 	private Double pageRank;
-	private int degree;
+	private int outDegree;
+	private int inDegree;  // degree for incoming edges
 	private Double emittedPageRank = 0.0;
 	private String[] neighbors;
 	
+	private Set<String> outDegreeWithinBlock;
+	private Set<String> inDegreeWithinBlock;
+
 	public Node(String value) throws IOException {
 		String[] tokens = value.toString().split("\\s+");
 		if (tokens.length < 2) {
@@ -22,10 +30,14 @@ public class Node {
 		nodeID = tokens[0].split("-")[0];
 		blockID = tokens[0].split("-")[1];
 		pageRank = new Double(tokens[1]);
-		degree = tokens.length - 2;
+		outDegree = tokens.length - 2;
 		neighbors = Arrays.copyOfRange(tokens, 2, tokens.length);
 		
-		if (degree > 0) emittedPageRank = pageRank / degree;
+		outDegreeWithinBlock = new HashSet<String>();
+		for(String n : neighbors)
+			if(Node.getBlockID(n).equals(blockID)) outDegreeWithinBlock.add(n);
+		
+		if (outDegree > 0) emittedPageRank = pageRank / outDegree;
 	}
 	
 	// format: PR nodeID-blockID pageRank destNodeID-blockID destNodeID-blockID ...
@@ -34,14 +46,14 @@ public class Node {
 		nodeID = tokensPR[1].split("-")[0];
 		blockID = tokensPR[1].split("-")[1];
 		pageRank = new Double(tokensPR[2]);
-		degree = tokensPR.length - 3;
+		outDegree = tokensPR.length - 3;
 		neighbors = Arrays.copyOfRange(tokensPR, 3, tokensPR.length);
 		
-		if (degree > 0) emittedPageRank = pageRank / degree;
+		if (outDegree > 0) emittedPageRank = pageRank / outDegree;
 	}
 	
 	public Boolean hasEdges() {
-		return degree > 0;
+		return outDegree > 0;
 	}
 	
 	public static String getBlockID(String edge) {
@@ -81,11 +93,19 @@ public class Node {
 	}
 
 	public int getDegree() {
-		return degree;
+		return outDegree;
 	}
 
 	public void setDegree(int degree) {
-		this.degree = degree;
+		this.outDegree = degree;
+	}
+	
+	public int getInDegree() {
+		return inDegree;
+	}
+
+	public void setInDegree(int inDegree) {
+		this.inDegree = inDegree;
 	}
 
 	public Double getEmittedPageRank() {
@@ -104,6 +124,14 @@ public class Node {
 		this.neighbors = neighbors;
 	}
 	
+	public ArrayList<String> getNeighborsList() {
+		return new ArrayList<String>(Arrays.asList(neighbors));
+	}
+	
+	public void setNeighborsList(ArrayList<String> neighbors) {
+		this.neighbors = neighbors.toArray(this.neighbors);
+	}
+	
 	public String neighborsToString() {
 		StringBuilder res = new StringBuilder();
 		for (int i = 0; i < neighbors.length; i++) {
@@ -113,5 +141,24 @@ public class Node {
 			}
 		}
 		return res.toString();
+	}
+	
+	public Set<String> getOutdegreeWithinBlock() {
+		return outDegreeWithinBlock;
+	}
+	
+	public void setIndegreeWithinBlock(Set<String> inDegrees) {
+		inDegreeWithinBlock = inDegrees;
+	}
+	
+	public Set<String> getIndegreeWithinBlock() {
+		return inDegreeWithinBlock;
+	}
+	
+	public void removeFromOutdegreeWithinBlock(String nodeID) {
+		outDegreeWithinBlock.remove(nodeID);
+	}
+	public void removeFromIndegreeWithinBlock(String nodeID) {
+		inDegreeWithinBlock.remove(nodeID);
 	}
 }
