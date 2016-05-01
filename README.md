@@ -163,11 +163,9 @@ The average error and average in-block iteration number per block for each MapRe
 
 The PageRank values for the two lowest-numbered nodes in each block are in `result/gauss_pagerank_values.txt`.
 
-**Comparison Jacobi vs Gauss-Seide**  
+**Comparison Jacobi vs Gauss-Seidel**  
 
-
-
-The results show that Gauss-Seidel Computation takes less number of in-block iteration to converge, particularly for the first three MapReduce passes.
+The results show that Gauss-Seidel Computation takes less number of in-block iteration to converge, particularly for the first three MapReduce passes, and need one pass more than Jacobi to converge. The first pass improves average number of iterations per block by 47%, and the second pass improves by 27%. This satisfies the claim that by using the newest pageRank values whenever possible, the in-block pageRank converges faster.
 
 ## 7. Random Block Partition
 
