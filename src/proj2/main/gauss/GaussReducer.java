@@ -13,6 +13,7 @@ import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import proj2.main.node.Node;
+import proj2.main.node.TopologicalSort;
 import proj2.main.util.Constants;
 
 /**
@@ -192,8 +193,10 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 		String nodeIDPair;
 		Double residual = new Double(0.0);
 
-		for (Entry<String, Node> n : nodeMap.entrySet()) {
-			nodeIDPair = n.getKey();
+//		for (Entry<String, Node> n : nodeMap.entrySet()) {
+		for (Node n : TopologicalSort.sort(nodeMap)) {
+//			nodeIDPair = n.getKey();
+			nodeIDPair = n.getNodeIDPair();
 			Double prevPR = NPR.get(nodeIDPair);
 			Double newPR = new Double(0.0);
 
