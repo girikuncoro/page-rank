@@ -1,0 +1,14 @@
+Iteration 0 average error 2.3386887671911762
+Iteration 0 average iteration per block 2.514705882352941
+Iteration 1 average error 0.32242048685294117
+Iteration 1 average iteration per block 2.0294117647058822
+Iteration 2 average error 0.19124016294117646
+Iteration 2 average iteration per block 2.0
+Iteration 3 average error 0.09341979076470588
+Iteration 3 average iteration per block 2.0
+Iteration 4 average error 0.062080906352941174
+Iteration 4 average iteration per block 2.0
+Iteration 5 average error 0.0335133024117647
+Iteration 5 average iteration per block 2.0
+Iteration 6 average error 0.026807231970588236
+Iteration 6 average iteration per block 2.0
