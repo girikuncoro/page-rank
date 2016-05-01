@@ -4,6 +4,7 @@ bin/
 .settings
 launch.sh
 data/nodepairs.txt
+data/nodepairsRandom.txt
 data/processed_edges.txt
 data/sample.txt
 .DS_Store
