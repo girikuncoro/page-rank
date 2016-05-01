@@ -1,6 +1,7 @@
 package proj2.main.node;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Node {
@@ -11,7 +12,9 @@ public class Node {
 	private int degree;
 	private Double emittedPageRank = 0.0;
 	private String[] neighbors;
-	
+	private int inDegree;  // degree for incoming edges
+
+
 	public Node(String value) throws IOException {
 		String[] tokens = value.toString().split("\\s+");
 		if (tokens.length < 2) {
@@ -87,6 +90,14 @@ public class Node {
 	public void setDegree(int degree) {
 		this.degree = degree;
 	}
+	
+	public int getInDegree() {
+		return inDegree;
+	}
+
+	public void setInDegree(int inDegree) {
+		this.inDegree = inDegree;
+	}
 
 	public Double getEmittedPageRank() {
 		return emittedPageRank;
@@ -102,6 +113,14 @@ public class Node {
 
 	public void setNeighbors(String[] neighbors) {
 		this.neighbors = neighbors;
+	}
+	
+	public ArrayList<String> getNeighborsList() {
+		return new ArrayList<String>(Arrays.asList(neighbors));
+	}
+	
+	public void setNeighborsList(ArrayList<String> neighbors) {
+		this.neighbors = neighbors.toArray(this.neighbors);
 	}
 	
 	public String neighborsToString() {
