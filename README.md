@@ -152,16 +152,15 @@ The average error and average in-block iteration number per block for each MapRe
 
 |Iteration|Average Error| Average Number of Iterations per Block |
 |:---------:|:--------------:|:-------:|
-|0||
-|0||
-|0||
-|0||
-|0||
-|0||
+|0| 2.8109963380735294 | 9.308823529411764
+|1| 0.03863734327941176 | 5.220588235294118
+|2| 0.02519361007352941 | 4.544117647058823
+|3| 0.010960004794117647 | 3.2941176470588234
+|4| 0.004877597617647059 | 2.3823529411764706
+|5| 0.00179155175 | 1.6176470588235294
+|6| 7.902894411764706E-4 | 1.3088235294117647
 
-The PageRank values for the two lowest-numbered nodes in each block are in `result/gauss_pagerank_values.txt`
-
-==Comparison==
+The PageRank values for the two lowest-numbered nodes in each block are in `result/gauss_pagerank_values.txt`.
 
 The results show that Gauss-Seidel Computation takes less number of in-block iteration to converge, particularly for the first three MapReduce passes.
 
@@ -171,36 +170,38 @@ The results show that Gauss-Seidel Computation takes less number of in-block ite
 
 |Iteration|Content|Jacobi METIS| Jacobi Random |
 |:---------:|:-------:|:--------------:|:-------:|
-|0|Average error| 2.8105539255441174 ||
-|0|Average iteration/block| 17.529411764705884 ||
-|1|Average error| 0.037807487029411765 ||
-|1|Average iteration/block| 7.161764705882353 ||
-|2|Average error| 0.023995235897058823 ||
-|2|Average iteration/block| 5.882352941176471 ||
-|3|Average error| 0.009842906882352941 ||
-|3|Average iteration/block| 3.8970588235294117 ||
-|4|Average error| 0.003830367220588235 ||
-|4|Average iteration/block| 2.514705882352941 ||
-|5|Average error|9.506281323529412E-4||
-|5|Average iteration/block| 1.338235294117647 ||
+|0|Average error| 2.8105539255441174 | 2.3386830244264702 |
+|0|Average iteration/block| 17.529411764705884 |3.0|
+|1|Average error| 0.037807487029411765 | 0.32240249805882354 |
+|1|Average iteration/block| 7.161764705882353 | 2.7205882352941178 |
+|2|Average error| 0.023995235897058823 | 0.19121401836764707 |
+|2|Average iteration/block| 5.882352941176471 | 2.0 |
+|3|Average error| 0.009842906882352941 | 0.09338011023529412 |
+|3|Average iteration/block| 3.8970588235294117 | 2.0 |
+|4|Average error| 0.003830367220588235 | 0.0619256143382353 |
+|4|Average iteration/block| 2.514705882352941 | 2.0 |
+|5|Average error|9.506281323529412E-4| 0.03344842155882353 |
+|5|Average iteration/block| 1.338235294117647 |2.0|
 
-==Comparison==
+Compared to the result based on METIS, the Jacobi Computation based on a random partition converges much slower. Actually, it converges as slow as simple computation.
 
 ### 7.2 Convergence Performance for Gauss-Seidel Reducer using METIS partition and a random partion
 
 |Iteration|Content| Gauss-Seidel MEITS| Gauss-Seidel Random|
 |:---------:|:-------:|:--------------:|:-------:|
-|0|Average error|||
-|0|Average iteration/block|||
-|1|Average error|||
-|1|Average iteration/block|||
-|2|Average error|||
-|2|Average iteration/block|||
-|3|Average error|||
-|3|Average iteration/block|||
-|4|Average error|||
-|4|Average iteration/block|||
-|5|Average error|||
-|5|Average iteration/block|||
+|0|Average error| 2.8109963380735294 | 2.3386887671911762 |
+|0|Average iteration/block| 9.308823529411764 | 2.514705882352941 |
+|1|Average error| 0.03863734327941176 | 0.32242048685294117 |
+|1|Average iteration/block| 5.220588235294118 | 2.0294117647058822 |
+|2|Average error| 0.02519361007352941 | 0.19124016294117646 |
+|2|Average iteration/block| 4.544117647058823 | 2.0 |
+|3|Average error| 0.010960004794117647 | 0.09341979076470588 |
+|3|Average iteration/block| 3.2941176470588234 | 2.0 |
+|4|Average error| 0.004877597617647059 | 0.062080906352941174 |
+|4|Average iteration/block| 2.3823529411764706 | 2.0 |
+|5|Average error| 0.00179155175 | 0.0335133024117647 |
+|5|Average iteration/block| 1.6176470588235294 |2.0|
+|6|Average error| 7.902894411764706E-4 | 0.026807231970588236 |
+|6|Average iteration/block| 1.3088235294117647 |2.0|
 
 ==Comparison==
