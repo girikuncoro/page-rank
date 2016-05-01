@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -194,7 +195,8 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 		Double residual = new Double(0.0);
 
 //		for (Entry<String, Node> n : nodeMap.entrySet()) {
-		for (Node n : TopologicalSort.sort(nodeMap)) {
+		List<Node> sorted = TopologicalSort.sort(nodeMap);
+		for (Node n : sorted) {
 //			nodeIDPair = n.getKey();
 			nodeIDPair = n.getNodeIDPair();
 			Double prevPR = NPR.get(nodeIDPair);

@@ -30,6 +30,10 @@ public class TopologicalSort {
 				Set<Node> newSources = new HashSet<Node>();
 				for (Node node : indegreeMap.get(0).toArray(new Node[indegreeMap.get(0).size()])) {
 					appending.add(node);
+					if(ifFinish(appending, prepending, nodeMap.size())) {
+						appending.addAll(prepending);
+						return appending;
+					}
 
 					outdegreeMap.get(node.getOutdegreeWithinBlock().size()).remove(node);
 					removeFromDifferentialMap(node, differentialMap);
@@ -46,6 +50,10 @@ public class TopologicalSort {
 				Set<Node> newSinks = new HashSet<Node>();
 				for (Node node : outdegreeMap.get(0).toArray(new Node[outdegreeMap.get(0).size()])) {
 					prepending.add(0, node);
+					if(ifFinish(appending, prepending, nodeMap.size())) {
+						appending.addAll(prepending);
+						return appending;
+					}
 
 					indegreeMap.get(node.getIndegreeWithinBlock().size()).remove(node);
 					removeFromDifferentialMap(node, differentialMap);
@@ -57,8 +65,8 @@ public class TopologicalSort {
 			}
 
 			// Find the biggest differential node
-			if (differentialMap.size() == 0)
-				break;
+//			if (differentialMap.size() == 0)
+//				break;
 
 			if (!differentialMap.containsKey(maxDiff))
 				maxDiff = Collections.max(differentialMap.keySet());
@@ -74,6 +82,10 @@ public class TopologicalSort {
 				outdegreeMap.get(0).addAll(newSinks);
 
 			appending.add(special);
+			if(ifFinish(appending, prepending, nodeMap.size())) {
+				appending.addAll(prepending);
+				return appending;
+			}
 		}
 
 		appending.addAll(prepending);
@@ -83,8 +95,6 @@ public class TopologicalSort {
 
 	private static void removeFromDifferentialMap(Node node, Map<Integer, Set<Node>> differentialMap) {
 		int nodeDiff = node.getOutdegreeWithinBlock().size() - node.getIndegreeWithinBlock().size();
-
-//		if(!differentialMap.containsKey(nodeDiff) || !differentialMap.get(nodeDiff).contains(node)) return;
 		
 		if(differentialMap.containsKey(nodeDiff) && differentialMap.get(nodeDiff).contains(node)) {
 			differentialMap.get(nodeDiff).remove(node);
@@ -203,5 +213,9 @@ public class TopologicalSort {
 		}
 
 		return result;
+	}
+	
+	private static boolean ifFinish(List<Node> l1, List<Node> l2, int total) {
+		return total == l1.size() + l2.size();
 	}
 }
