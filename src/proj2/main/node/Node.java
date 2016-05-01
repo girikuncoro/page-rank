@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Node {
@@ -158,7 +157,13 @@ public class Node {
 	public void removeFromOutdegreeWithinBlock(String nodeID) {
 		outDegreeWithinBlock.remove(nodeID);
 	}
+	
 	public void removeFromIndegreeWithinBlock(String nodeID) {
 		inDegreeWithinBlock.remove(nodeID);
+	}
+
+	@Override
+	public String toString() {
+		return "Node [nodeIDPair=" + nodeIDPair + "]";
 	}
 }
