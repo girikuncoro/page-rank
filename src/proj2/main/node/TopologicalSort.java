@@ -13,6 +13,8 @@ import java.util.Set;
 public class TopologicalSort {
 
 	public static List<Node> sort(Map<String, Node> nodeMap) {
+//		if(!ifUseTopo) return new LinkedList<Node>(nodeMap.values());
+
 		List<Node> appending = new LinkedList<Node>();
 		List<Node> prepending = new LinkedList<Node>();
 
@@ -31,17 +33,6 @@ public class TopologicalSort {
 
 					outdegreeMap.get(node.getOutdegreeWithinBlock().size()).remove(node);
 					removeFromDifferentialMap(node, differentialMap);
-					
-//					boolean flag = false;
-//					for(String n : node.getOutdegreeWithinBlock()) {
-//						Node neighbor = nodeMap.get(n);
-//						if(!neighbor.getIndegreeWithinBlock().contains(node.getNodeIDPair())) {
-//							System.out.println("########wrong in source neighbor: " + node.toString());
-//							System.out.println(neighbor.toString());
-//							flag = true;
-//						}
-//					}
-//					if(flag) System.exit(0);
 					
 					newSources.addAll(removeOutdegreeNeighbors(nodeMap, node, indegreeMap, differentialMap));
 				}
@@ -92,19 +83,24 @@ public class TopologicalSort {
 
 	private static void removeFromDifferentialMap(Node node, Map<Integer, Set<Node>> differentialMap) {
 		int nodeDiff = node.getOutdegreeWithinBlock().size() - node.getIndegreeWithinBlock().size();
-//		try {
-		if(!differentialMap.containsKey(nodeDiff) || !differentialMap.get(nodeDiff).contains(node)) return;
-		differentialMap.get(nodeDiff).remove(node);
-		if (differentialMap.get(nodeDiff).size() == 0)
-			differentialMap.remove(nodeDiff);
-//		} catch (Exception e) {
-//			System.out.println("!!!!!!wrong node here: " + node.toString() + " node diff: " + nodeDiff);
-//			for(Entry<Integer, Set<Node>> entry : differentialMap.entrySet()) {
-//				if(entry.getValue().contains(node)) System.out.println("actual diff is: " + entry.getKey());
-//			}
-//			e.printStackTrace();
-//			System.exit(0);
-//		}
+
+//		if(!differentialMap.containsKey(nodeDiff) || !differentialMap.get(nodeDiff).contains(node)) return;
+		
+		if(differentialMap.containsKey(nodeDiff) && differentialMap.get(nodeDiff).contains(node)) {
+			differentialMap.get(nodeDiff).remove(node);
+			if (differentialMap.get(nodeDiff).size() == 0)
+				differentialMap.remove(nodeDiff);
+		}
+		else {
+			for (Entry<Integer, Set<Node>> entry : differentialMap.entrySet()) {
+				if(entry.getValue().contains(node)) {
+					entry.getValue().remove(node);
+					if(entry.getValue().size() == 0)
+						differentialMap.remove(entry.getKey());
+					break;
+				}
+			}
+		}
 	}
 
 	private static void addToDifferentialMap(Node node, Map<Integer, Set<Node>> differentialMap) {

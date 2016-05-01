@@ -17,6 +17,8 @@ import proj2.main.util.Constants;
  * It shouldn't take than more than 7 passes to converge, faster than SimplePageRank
  */
 public class GaussPageRank {
+	
+	public static boolean ifUseTopo = true;
 
 	public static void main(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 		if (args.length < 2){
@@ -75,6 +77,8 @@ public class GaussPageRank {
 		    // Iteration 0 average iteration per block 4.222
 		    System.out.println("Iteration " + passNum + " average iteration per block " + avgIteration);
 		    passNum++;
+		    
+//		    if(avgResidual < Constants.TOPO_THRESHOLD) ifUseTopo = false;
 			
 		} while (avgResidual > Constants.CONVERGENCE && passNum < iterationNum);
 	}
