@@ -23,7 +23,7 @@ public class Constants {
 	public static final double BLOCK_NUM = 68;
 	public static final double CONVERGENCE = 0.001;
 	public static enum BlockedCounterEnum {
-		BLOCKED_RESIDUAL, N_ITERATION;
+		BLOCKED_RESIDUAL, N_ITERATION, TOPO_FLAG;
 	}
-	public static final double TOPO_THRESHOLD = 0.3;
+	public static final double TOPO_THRESHOLD = 10;
 }

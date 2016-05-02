@@ -59,12 +59,15 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 
 		for(Entry<String, Set<String>> entry : BE.entrySet())
 			nodeMap.get(entry.getKey()).setIndegreeWithinBlock(entry.getValue());
+		
+		boolean flag = context.getCounter(Constants.BlockedCounterEnum.TOPO_FLAG).getValue() == 0l;
+		List<Node> sorted = TopologicalSort.sort(nodeMap, flag);
 
 		// repeatedly updates PR[v] for every v ∈ B 
 		// until "in-block residual" is below threshold or it reaches N iteration
 		int iterNum = 0;
 		do {
-			currAvgResidual = iterateBlockOnce();
+			currAvgResidual = iterateBlockOnce(sorted);
 			iterNum++;
 		} while (iterNum < Constants.INBLOCK_MAX_ITERATION && currAvgResidual > Constants.CONVERGENCE);
 
@@ -190,12 +193,11 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 	 * BC contains u outside block B 
 	 * @return average residual (total changes/total nodes in B) for current iteration
 	 */
-	public double iterateBlockOnce() {
+	public double iterateBlockOnce(List<Node> sorted) {
 		String nodeIDPair;
 		Double residual = new Double(0.0);
 
 //		for (Entry<String, Node> n : nodeMap.entrySet()) {
-		List<Node> sorted = TopologicalSort.sort(nodeMap);
 		for (Node n : sorted) {
 //			nodeIDPair = n.getKey();
 			nodeIDPair = n.getNodeIDPair();

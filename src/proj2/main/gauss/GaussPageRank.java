@@ -18,7 +18,7 @@ import proj2.main.util.Constants;
  */
 public class GaussPageRank {
 	
-	public static boolean ifUseTopo = true;
+//	public static boolean ifUseTopo = true;
 
 	public static void main(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 		if (args.length < 2){
@@ -78,7 +78,9 @@ public class GaussPageRank {
 		    System.out.println("Iteration " + passNum + " average iteration per block " + avgIteration);
 		    passNum++;
 		    
-//		    if(avgResidual < Constants.TOPO_THRESHOLD) ifUseTopo = false;
+		    if(avgResidual < Constants.TOPO_THRESHOLD) {
+		    	job.getCounters().findCounter(Constants.BlockedCounterEnum.TOPO_FLAG).increment(1);
+		    }
 			
 		} while (avgResidual > Constants.CONVERGENCE && passNum < iterationNum);
 	}

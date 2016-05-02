@@ -12,8 +12,10 @@ import java.util.Set;
 
 public class TopologicalSort {
 
-	public static List<Node> sort(Map<String, Node> nodeMap) {
-//		if(!ifUseTopo) return new LinkedList<Node>(nodeMap.values());
+	public static List<Node> sort(Map<String, Node> nodeMap, boolean ifUseTopo) {
+		if(!ifUseTopo) {
+			return new LinkedList<Node>(nodeMap.values());
+		}
 
 		List<Node> appending = new LinkedList<Node>();
 		List<Node> prepending = new LinkedList<Node>();
@@ -24,7 +26,7 @@ public class TopologicalSort {
 		
 		int maxDiff = Collections.max(differentialMap.keySet());
 
-		while (indegreeMap.size() != 0 || outdegreeMap.size() != 0) {
+		while (!ifFinish(appending, prepending, nodeMap.size())) {
 			// Source nodes
 			while (indegreeMap.get(0).size() != 0) {
 				Set<Node> newSources = new HashSet<Node>();
@@ -65,9 +67,6 @@ public class TopologicalSort {
 			}
 
 			// Find the biggest differential node
-//			if (differentialMap.size() == 0)
-//				break;
-
 			if (!differentialMap.containsKey(maxDiff))
 				maxDiff = Collections.max(differentialMap.keySet());
 			
