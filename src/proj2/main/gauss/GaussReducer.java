@@ -60,8 +60,11 @@ public class GaussReducer extends Reducer<Text, Text, Text, Text> {
 		for(Entry<String, Set<String>> entry : BE.entrySet())
 			nodeMap.get(entry.getKey()).setIndegreeWithinBlock(entry.getValue());
 		
-		boolean flag = context.getCounter(Constants.BlockedCounterEnum.TOPO_FLAG).getValue() == 0l;
-		List<Node> sorted = TopologicalSort.sort(nodeMap, flag);
+//		boolean flag = context.getCounter(Constants.BlockedCounterEnum.TOPO_FLAG).getValue() == 0l;
+//		List<Node> sorted = TopologicalSort.sort(nodeMap, flag);
+		
+		// Diasble topological sort because it doesn't perform well
+		List<Node> sorted = TopologicalSort.sort(nodeMap, false);
 
 		// repeatedly updates PR[v] for every v ∈ B 
 		// until "in-block residual" is below threshold or it reaches N iteration

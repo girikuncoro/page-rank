@@ -1,0 +1,45 @@
+##############################################################
+Jacobi Page Rank: Jacobi Computation on Random Partition
+(Run in-block iteration until convergence)
+##############################################################
+
+Iteration 0 average error 2.3386830244264702
+Iteration 0 average iteration per block 3.0
+Iteration 1 average error 0.32240249805882354
+Iteration 1 average iteration per block 2.7205882352941178
+Iteration 2 average error 0.19121401836764707
+Iteration 2 average iteration per block 2.0
+Iteration 3 average error 0.09338011023529412
+Iteration 3 average iteration per block 2.0
+Iteration 4 average error 0.0619256143382353
+Iteration 4 average iteration per block 2.0
+Iteration 5 average error 0.03344842155882353
+Iteration 5 average iteration per block 2.0
+Iteration 6 average error 0.026664923911764705
+Iteration 6 average iteration per block 2.0
+Iteration 7 average error 0.016292506205882355
+Iteration 7 average iteration per block 2.0
+Iteration 8 average error 0.014016076676470588
+Iteration 8 average iteration per block 2.0
+Iteration 9 average error 0.009574295602941176
+Iteration 9 average iteration per block 2.0
+Iteration 10 average error 0.008222171470588235
+Iteration 10 average iteration per block 2.0
+Iteration 11 average error 0.005985937029411765
+Iteration 11 average iteration per block 2.0
+Iteration 12 average error 0.005201623102941177
+Iteration 12 average iteration per block 2.0
+Iteration 13 average error 0.0039064924852941175
+Iteration 13 average iteration per block 2.0
+Iteration 14 average error 0.003380433970588235
+Iteration 14 average iteration per block 2.0
+Iteration 15 average error 0.0026251950882352944
+Iteration 15 average iteration per block 2.0
+Iteration 16 average error 0.0022475981029411764
+Iteration 16 average iteration per block 2.0
+Iteration 17 average error 0.001781747294117647
+Iteration 17 average iteration per block 2.0
+Iteration 18 average error 0.0015212083088235295
+Iteration 18 average iteration per block 2.0
+Iteration 19 average error 0.0012204237205882351
+Iteration 19 average iteration per block 2.0

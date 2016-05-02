@@ -39,7 +39,7 @@ public class TestTopologicalSort {
 			nodeMap.put(n.getNodeIDPair(), n);
 		}
 
-		List<Node> res = TopologicalSort.sort(nodeMap);
+		List<Node> res = TopologicalSort.sort(nodeMap, true);
 		List<Node> expectedRes = new ArrayList<Node>();
 		expectedRes.add(node0);
 		expectedRes.add(node1);
@@ -77,7 +77,7 @@ public class TestTopologicalSort {
 			nodeMap.put(n.getNodeIDPair(), n);
 		}
 
-		List<Node> res = TopologicalSort.sort(nodeMap);
+		List<Node> res = TopologicalSort.sort(nodeMap, true);
 		ArrayList<Node> expectedRes = new ArrayList<Node>();
 		expectedRes.add(node0);
 		expectedRes.add(node1);
@@ -92,7 +92,7 @@ public class TestTopologicalSort {
 			System.out.println(" " + res.get(i).getNodeID());
 		}
 	}
-	
+
 	@Test
 	public void testSort2CyclicGraph2() throws IOException {
 		ArrayList<Node> nodes = new ArrayList<Node>();
@@ -134,23 +134,14 @@ public class TestTopologicalSort {
 			nodeMap.put(n.getNodeIDPair(), n);
 		}
 
-		List<Node> res = TopologicalSort.sort(nodeMap);
-//		ArrayList<Node> expectedRes = new ArrayList<Node>();
-//		expectedRes.add(node0);
-//		expectedRes.add(node1);
-//		expectedRes.add(node2);
-//		expectedRes.add(node3);
-
-//		assertEquals(4, res.size());
+		List<Node> res = TopologicalSort.sort(nodeMap, true);
 
 		System.out.println("Sorted result from least indegree");
 		for (int i = 0; i < 10; i++) {
-//			System.out.print(expectedRes.get(i).getNodeID());
-//		System.out.println(res.toString());
 			System.out.println(" " + res.get(i).getNodeID());
 		}
 	}
-	
+
 	@Test
 	public void testSort2CyclicGraph3() throws IOException {
 		ArrayList<Node> nodes = new ArrayList<Node>();
@@ -181,7 +172,7 @@ public class TestTopologicalSort {
 		nodes.add(node7);
 		node7.setIndegreeWithinBlock(new HashSet<String>(Arrays.asList(new String[] { "1-0" })));
 		nodes.add(node8);
-		node8.setIndegreeWithinBlock(new HashSet<String>(Arrays.asList(new String[] { })));
+		node8.setIndegreeWithinBlock(new HashSet<String>(Arrays.asList(new String[] {})));
 
 		Map<String, Node> nodeMap = new HashMap<String, Node>();
 
@@ -189,23 +180,13 @@ public class TestTopologicalSort {
 			nodeMap.put(n.getNodeIDPair(), n);
 		}
 
-		List<Node> res = TopologicalSort.sort(nodeMap);
-//		ArrayList<Node> expectedRes = new ArrayList<Node>();
-//		expectedRes.add(node0);
-//		expectedRes.add(node1);
-//		expectedRes.add(node2);
-//		expectedRes.add(node3);
-
-//		assertEquals(4, res.size());
-
+		List<Node> res = TopologicalSort.sort(nodeMap, true);
 		System.out.println("Sorted result from least indegree");
 		for (int i = 0; i < 9; i++) {
-//			System.out.print(expectedRes.get(i).getNodeID());
-//		System.out.println(res.toString());
 			System.out.println(" " + res.get(i).getNodeID());
 		}
 	}
-	
+
 	@Test
 	public void testSort2CyclicGraph4() throws IOException {
 		ArrayList<Node> nodes = new ArrayList<Node>();
@@ -237,7 +218,7 @@ public class TestTopologicalSort {
 		nodes.add(node7);
 		node7.setIndegreeWithinBlock(new HashSet<String>(Arrays.asList(new String[] { "3-0", "8-0" })));
 		nodes.add(node8);
-		node8.setIndegreeWithinBlock(new HashSet<String>(Arrays.asList(new String[] { })));
+		node8.setIndegreeWithinBlock(new HashSet<String>(Arrays.asList(new String[] {})));
 		nodes.add(node9);
 		node9.setIndegreeWithinBlock(new HashSet<String>(Arrays.asList(new String[] { "8-0" })));
 
@@ -247,19 +228,10 @@ public class TestTopologicalSort {
 			nodeMap.put(n.getNodeIDPair(), n);
 		}
 
-		List<Node> res = TopologicalSort.sort(nodeMap);
-//		ArrayList<Node> expectedRes = new ArrayList<Node>();
-//		expectedRes.add(node0);
-//		expectedRes.add(node1);
-//		expectedRes.add(node2);
-//		expectedRes.add(node3);
-
-//		assertEquals(4, res.size());
+		List<Node> res = TopologicalSort.sort(nodeMap, true);
 
 		System.out.println("Sorted result from least indegree");
 		for (int i = 0; i < 10; i++) {
-//			System.out.print(expectedRes.get(i).getNodeID());
-//		System.out.println(res.toString());
 			System.out.println(" " + res.get(i).getNodeID());
 		}
 	}

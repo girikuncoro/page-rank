@@ -1,6 +1,5 @@
 ##############################################################
-Blocked Page Rank: Jacobian Computation
-100 Max Iteration per Block
+Blocked Page Rank: Jacobian Computation on METIS partition
 (Run in-block iteration until convergence)
 ##############################################################
 

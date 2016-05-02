@@ -17,8 +17,6 @@ import proj2.main.util.Constants;
  * It shouldn't take than more than 7 passes to converge, faster than SimplePageRank
  */
 public class GaussPageRank {
-	
-//	public static boolean ifUseTopo = true;
 
 	public static void main(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 		if (args.length < 2){

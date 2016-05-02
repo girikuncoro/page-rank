@@ -13,7 +13,7 @@ import java.util.Set;
 public class TopologicalSort {
 
 	public static List<Node> sort(Map<String, Node> nodeMap, boolean ifUseTopo) {
-		if(!ifUseTopo) {
+		if (!ifUseTopo) {
 			return new LinkedList<Node>(nodeMap.values());
 		}
 
@@ -23,7 +23,7 @@ public class TopologicalSort {
 		Map<Integer, Set<Node>> indegreeMap = getInvertedIndegrees(nodeMap);
 		Map<Integer, Set<Node>> outdegreeMap = getInvertedOutdegrees(nodeMap);
 		Map<Integer, Set<Node>> differentialMap = getInvertedDifferentials(nodeMap);
-		
+
 		int maxDiff = Collections.max(differentialMap.keySet());
 
 		while (!ifFinish(appending, prepending, nodeMap.size())) {
@@ -32,14 +32,14 @@ public class TopologicalSort {
 				Set<Node> newSources = new HashSet<Node>();
 				for (Node node : indegreeMap.get(0).toArray(new Node[indegreeMap.get(0).size()])) {
 					appending.add(node);
-					if(ifFinish(appending, prepending, nodeMap.size())) {
+					if (ifFinish(appending, prepending, nodeMap.size())) {
 						appending.addAll(prepending);
 						return appending;
 					}
 
 					outdegreeMap.get(node.getOutdegreeWithinBlock().size()).remove(node);
 					removeFromDifferentialMap(node, differentialMap);
-					
+
 					newSources.addAll(removeOutdegreeNeighbors(nodeMap, node, indegreeMap, differentialMap));
 				}
 				indegreeMap.get(0).clear();
@@ -52,7 +52,7 @@ public class TopologicalSort {
 				Set<Node> newSinks = new HashSet<Node>();
 				for (Node node : outdegreeMap.get(0).toArray(new Node[outdegreeMap.get(0).size()])) {
 					prepending.add(0, node);
-					if(ifFinish(appending, prepending, nodeMap.size())) {
+					if (ifFinish(appending, prepending, nodeMap.size())) {
 						appending.addAll(prepending);
 						return appending;
 					}
@@ -69,7 +69,7 @@ public class TopologicalSort {
 			// Find the biggest differential node
 			if (!differentialMap.containsKey(maxDiff))
 				maxDiff = Collections.max(differentialMap.keySet());
-			
+
 			Node special = differentialMap.get(maxDiff).iterator().next();
 
 			removeFromDifferentialMap(special, differentialMap);
@@ -81,7 +81,7 @@ public class TopologicalSort {
 				outdegreeMap.get(0).addAll(newSinks);
 
 			appending.add(special);
-			if(ifFinish(appending, prepending, nodeMap.size())) {
+			if (ifFinish(appending, prepending, nodeMap.size())) {
 				appending.addAll(prepending);
 				return appending;
 			}
@@ -94,17 +94,16 @@ public class TopologicalSort {
 
 	private static void removeFromDifferentialMap(Node node, Map<Integer, Set<Node>> differentialMap) {
 		int nodeDiff = node.getOutdegreeWithinBlock().size() - node.getIndegreeWithinBlock().size();
-		
-		if(differentialMap.containsKey(nodeDiff) && differentialMap.get(nodeDiff).contains(node)) {
+
+		if (differentialMap.containsKey(nodeDiff) && differentialMap.get(nodeDiff).contains(node)) {
 			differentialMap.get(nodeDiff).remove(node);
 			if (differentialMap.get(nodeDiff).size() == 0)
 				differentialMap.remove(nodeDiff);
-		}
-		else {
+		} else {
 			for (Entry<Integer, Set<Node>> entry : differentialMap.entrySet()) {
-				if(entry.getValue().contains(node)) {
+				if (entry.getValue().contains(node)) {
 					entry.getValue().remove(node);
-					if(entry.getValue().size() == 0)
+					if (entry.getValue().size() == 0)
 						differentialMap.remove(entry.getKey());
 					break;
 				}
@@ -213,7 +212,7 @@ public class TopologicalSort {
 
 		return result;
 	}
-	
+
 	private static boolean ifFinish(List<Node> l1, List<Node> l2, int total) {
 		return total == l1.size() + l2.size();
 	}
